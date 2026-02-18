@@ -1,0 +1,493 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPU Attendance Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            z-index: -1;
+        }
+        .header h1 {
+            font-size: 3rem;
+            color: #4a5568;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header p {
+            color: #718096;
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 40px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        .tab-button {
+            background: #f7fafc;
+            border: none;
+            padding: 18px 35px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: 15px 15px 0 0;
+            transition: all 0.4s ease;
+            margin: 0 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .tab-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(66, 153, 225, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        .tab-button:hover::before {
+            left: 100%;
+        }
+        .tab-button.active {
+            background: #4299e1;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(66, 153, 225, 0.3);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #4a5568;
+            font-size: 1rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+            transform: scale(1.02);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .subjects {
+            margin-top: 25px;
+        }
+        .subject-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        .subject-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        .subject-row input {
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        .subject-row input:focus {
+            border-color: #4299e1;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.1);
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transition: width 0.6s, height 0.6s;
+            transform: translate(-50%, -50%);
+        }
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(66, 153, 225, 0.3);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            color: #4a5568;
+        }
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        .result {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .result h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #4a5568;
+            text-align: center;
+        }
+        .result p {
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        .highlight {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+        .good {
+            color: #38a169;
+        }
+        .warn {
+            color: #e53e3e;
+        }
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            margin-top: 50px;
+            color: #718096;
+            backdrop-filter: blur(10px);
+        }
+        @media (max-width: 768px) {
+            .subject-row {
+                grid-template-columns: 1fr;
+            }
+            .tabs {
+                flex-direction: column;
+            }
+            .tab-button {
+                margin: 5px 0;
+            }
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-calculator"></i> LPU Attendance Calculator</h1>
+        <p>Professional tool for calculating and managing your attendance at Lovely Professional University</p>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab(0)">Subject-Based Calculator</button>
+            <button class="tab-button" onclick="showTab(1)">Day-Skip Calculator</button>
+        </div>
+
+        <div id="tab0" class="tab-content active">
+            <h2>Aggregate Attendance Calculator</h2>
+            <p>Enter details for each subject to calculate your overall attendance and requirements.</p>
+            <div class="grid">
+                <div class="form-group">
+                    <label for="target">Target Attendance % (e.g., 75)</label>
+                    <input id="target" type="number" placeholder="75" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="miss">Classes You Plan to Miss (Optional)</label>
+                    <input id="miss" type="number" placeholder="e.g., 5" min="0">
+                </div>
+            </div>
+            <div id="subjects" class="subjects">
+                <!-- Subject rows will be added here -->
+            </div>
+            <div class="buttons">
+                <button class="btn btn-secondary" onclick="addRow()"><i class="fas fa-plus"></i> Add Subject</button>
+                <button class="btn btn-primary" onclick="calculateAggregate()"><i class="fas fa-calculator"></i> Calculate</button>
+            </div>
+            <div id="output" class="result" style="display: none;"></div>
+        </div>
+
+        <div id="tab1" class="tab-content">
+            <h2>Day-Skip Attendance Calculator</h2>
+            <p>Calculate your final attendance if you skip classes or days.</p>
+
+            <div class="grid">
+                <div class="form-group">
+                    <label for="total">Total Classes Conducted</label>
+                    <input id="total" type="number" placeholder="e.g., 50" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="attended">Classes Attended</label>
+                    <input id="attended" type="number" placeholder="e.g., 25" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="perday">Classes Per Day</label>
+                    <input id="perday" type="number" placeholder="e.g., 5" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="days">Days You Will Skip</label>
+                    <input id="days" type="number" placeholder="e.g.2,If you want to skip class then enter 0" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="extra">Extra Classes to Skip (Optional)</label>
+                    <input id="extra" type="number" placeholder="e.g., 2 or 3" min="0">
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn btn-primary" onclick="calculateSkip()">
+                    <i class="fas fa-calculator"></i> Calculate Final Attendance
+                </button>
+            </div>
+
+            <div id="out" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2023 LPU Attendance Calculator. Built for students by students. <i class="fas fa-graduation-cap"></i></p>
+    </div>
+
+    <script>
+        const subjectsDiv = document.getElementById('subjects');
+        let subjectCount = 0;
+
+        // Initialize with 3 subjects
+        for (let i = 0; i < 3; i++) addRow();
+
+        function addRow() {
+            subjectCount++;
+            const row = document.createElement('div');
+            row.className = 'subject-row';
+            row.innerHTML = `
+                <input placeholder="Subject Name" required>
+                <input type="number" placeholder="Attended" min="0" required>
+                <input type="number" placeholder="Total" min="0" required>
+            `;
+            subjectsDiv.appendChild(row);
+        }
+
+        function showTab(tabIndex) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-button');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+            tabs[tabIndex].classList.add('active');
+            buttons[tabIndex].classList.add('active');
+        }
+
+        function calculateAggregate() {
+            const target = parseFloat(document.getElementById('target').value) || 75;
+            const miss = parseFloat(document.getElementById('miss').value) || 0;
+            const rows = subjectsDiv.querySelectorAll('.subject-row');
+            let totalAttended = 0;
+            let totalClasses = 0;
+            let totalPercent = 0;
+            let numSubjects = 0;
+            let subjectDetails = [];
+
+            for (let row of rows) {
+                const inputs = row.querySelectorAll('input');
+                const name = inputs[0].value || 'Unnamed';
+                const attended = parseFloat(inputs[1].value) || 0;
+                const total = parseFloat(inputs[2].value) || 0;
+                if (total > 0) {
+                    totalAttended += attended;
+                    totalClasses += total;
+                    const percent = (attended / total) * 100;
+                    const roundedPercent = Math.round(percent);
+                    subjectDetails.push(`${name}: ${attended}/${total} (${roundedPercent}%)`);
+                    totalPercent += roundedPercent;
+                    numSubjects++;
+                }
+            }
+
+            if (numSubjects === 0) {
+                alert('Please enter valid subject details.');
+                return;
+            }
+
+            const currentPercent = totalPercent / numSubjects; // Average of rounded subject percentages
+            const aggregatePercent = (totalAttended / totalClasses) * 100; // For requirement calculation
+            const newTotal = totalClasses + miss;
+            const afterMissPercent = (totalAttended / newTotal) * 100;
+
+            let requirementText = '';
+            if (aggregatePercent >= target) {
+                const canMiss = Math.floor((totalAttended - (target / 100) * totalClasses) / (target / 100));
+                requirementText = `You can miss up to ${canMiss} more classes to maintain ${target}% attendance.`;
+            } else {
+                const needToAttend = Math.ceil(((target / 100) * totalClasses - totalAttended) / (1 - target / 100));
+                requirementText = `You need to attend ${needToAttend} more classes to reach ${target}% attendance.`;
+            }
+
+            const output = document.getElementById('output');
+            output.style.display = 'block';
+            output.innerHTML = `
+                <h3>Aggregate Attendance Results</h3>
+                <p><strong>Subject Details:</strong></p>
+                <ul>${subjectDetails.map(s => `<li>${s}</li>`).join('')}</ul>
+                <p class="highlight">Current Aggregate Attendance: ${Math.round(currentPercent)}%</p>
+                ${miss > 0 ? `<p>After missing ${miss} planned classes: ${afterMissPercent.toFixed(1)}%</p>` : ''}
+                <p>${requirementText}</p>
+                <p class="${aggregatePercent >= target ? 'good' : 'warn'}">
+                    ${aggregatePercent >= target ? '✅ Above target' : '⚠️ Below target'}
+                </p>
+            `;
+        }
+
+        function calculateSkip() {
+            const total = parseFloat(document.getElementById('total').value);
+            const attended = parseFloat(document.getElementById('attended').value);
+            const perday = parseFloat(document.getElementById('perday').value) || 0;
+            const days = parseFloat(document.getElementById('days').value) || 0;
+            const extra = parseFloat(document.getElementById('extra').value) || 0;
+
+            if (!total || attended == null || attended < 0 || total < attended) {
+                alert('Please enter valid current attendance data.');
+                return;
+            }
+
+            const current = (attended / total) * 100;
+            const missedFromDays = perday * days;
+            const totalMissed = missedFromDays + extra;
+            const newTotal = total + totalMissed;
+            const finalPercent = (attended / newTotal) * 100;
+
+            const out = document.getElementById('out');
+            out.style.display = 'block';
+            out.innerHTML = `
+                <h3>Calculation Results</h3>
+                <p class="highlight">Current Attendance: ${Math.round(current)}%</p>
+                <hr>
+                <p><strong>Missed from days:</strong> ${missedFromDays}</p>
+                <p><strong>Extra skipped classes:</strong> ${extra}</p>
+                <p><strong>Total classes missed:</strong> ${totalMissed}</p>
+                <p class="highlight">Final Attendance: ${Math.round(finalPercent)}%</p>
+                <p class="${finalPercent < 75 ? 'warn' : 'good'}">
+                    ${finalPercent < 75 ? '⚠️ Below 75% — Shortage Risk' : '✅ Safe Attendance'}
+                </p>
+                <hr>
+                <p><strong>Total Classes After Absence:</strong> ${newTotal}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
+```
