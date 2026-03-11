@@ -6,363 +6,454 @@
     <title>LPU Pro Attendance Tracker</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
-            --primary: #6C5CE7;
-            --primary-dark: #5649c0;
-            --accent: #00CEC9;
-            --bg: #F0F2F5;
-            --card-bg: #FFFFFF;
-            --text: #2D3436;
-            --text-light: #636E72;
-            --border: #DFE6E9;
-            --success: #00b894;
-            --warning: #fdcb6e;
-            --danger: #d63031;
-            --shadow: 0 10px 30px rgba(0,0,0,0.08);
-            --transition: all 0.3s ease;
-            --navbar-h: 60px;
+            --primary: #4F46E5;
+            --primary-light: #6366F1;
+            --primary-dark: #3730A3;
+            --accent: #06B6D4;
+            --accent2: #10B981;
+            --dl-color: #F59E0B;
+            --bg: #F1F5F9;
+            --card-bg: rgba(255,255,255,0.85);
+            --card-glass: rgba(255,255,255,0.6);
+            --text: #1E293B;
+            --text-light: #64748B;
+            --text-muted: #94A3B8;
+            --border: rgba(148,163,184,0.25);
+            --border-solid: #E2E8F0;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 6px rgba(0,0,0,0.04);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.06);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --navbar-h: 64px;
+            --radius: 16px;
+            --radius-sm: 10px;
         }
 
         [data-theme="dark"] {
-            --bg: #1e272e;
-            --card-bg: #2d3436;
-            --text: #dfe6e9;
-            --text-light: #b2bec3;
-            --border: #4b565e;
-            --shadow: 0 10px 30px rgba(0,0,0,0.3);
+            --bg: #0F172A;
+            --card-bg: rgba(30,41,59,0.9);
+            --card-glass: rgba(30,41,59,0.7);
+            --text: #F1F5F9;
+            --text-light: #94A3B8;
+            --text-muted: #64748B;
+            --border: rgba(148,163,184,0.15);
+            --border-solid: #334155;
+            --shadow: 0 4px 24px rgba(0,0,0,0.3), 0 1px 6px rgba(0,0,0,0.2);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         html { scroll-behavior: smooth; }
-        
+
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg);
             color: var(--text);
             line-height: 1.6;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.35s, color 0.35s;
             min-height: 100vh;
             -webkit-text-size-adjust: 100%;
+            background-image: 
+                radial-gradient(ellipse at 20% 20%, rgba(79,70,229,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.06) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+        [data-theme="dark"] body,
+        [data-theme="dark"] {
+            background-image: 
+                radial-gradient(ellipse at 20% 20%, rgba(79,70,229,0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.08) 0%, transparent 50%);
         }
 
         /* ── Navbar ── */
         .navbar {
             background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             padding: 0 clamp(1rem, 4vw, 2rem);
             height: var(--navbar-h);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.06);
+            box-shadow: 0 1px 0 var(--border), var(--shadow-sm);
             position: sticky;
             top: 0;
             z-index: 200;
+            border-bottom: 1px solid var(--border);
         }
 
         .logo {
-            font-size: clamp(1.1rem, 4vw, 1.5rem);
-            font-weight: 700;
+            font-size: clamp(1rem, 3.5vw, 1.3rem);
+            font-weight: 800;
             color: var(--primary);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             white-space: nowrap;
+            letter-spacing: -0.02em;
+        }
+        .logo-icon {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(79,70,229,0.35);
         }
 
+        .nav-actions { display: flex; align-items: center; gap: 8px; }
+
         .theme-toggle {
-            background: transparent;
-            border: 1.5px solid var(--border);
-            color: var(--text);
-            width: 40px;
-            height: 40px;
+            background: var(--bg);
+            border: 1.5px solid var(--border-solid);
+            color: var(--text-light);
+            width: 40px; height: 40px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
-        .theme-toggle:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .theme-toggle:hover { background: var(--primary); color: white; border-color: var(--primary); transform: rotate(20deg); }
 
         /* ── Layout ── */
         .container {
-            max-width: 1060px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: clamp(16px, 3vw, 40px) clamp(12px, 3vw, 20px);
+            padding: clamp(16px, 3vw, 32px) clamp(12px, 3vw, 20px);
         }
 
         .dashboard-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: clamp(16px, 3vw, 30px);
+            gap: clamp(16px, 2.5vw, 24px);
         }
 
-        @media (min-width: 820px) {
+        @media (min-width: 860px) {
             .dashboard-grid { grid-template-columns: 2fr 1fr; align-items: start; }
         }
 
         /* ── Cards ── */
         .card {
             background: var(--card-bg);
-            border-radius: clamp(12px, 2vw, 16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius);
             padding: clamp(16px, 4vw, 28px);
             box-shadow: var(--shadow);
+            border: 1px solid var(--border);
             transition: var(--transition);
         }
+        .card:hover { box-shadow: var(--shadow-lg); }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: clamp(16px, 3vw, 25px);
+            margin-bottom: clamp(14px, 3vw, 22px);
+            padding-bottom: clamp(12px, 2vw, 16px);
             border-bottom: 1px solid var(--border);
-            padding-bottom: clamp(12px, 2vw, 15px);
         }
 
         .card-title {
-            font-size: clamp(1rem, 3vw, 1.2rem);
-            font-weight: 600;
-            color: var(--primary);
+            font-size: clamp(0.95rem, 2.8vw, 1.15rem);
+            font-weight: 700;
+            color: var(--text);
             display: flex;
             align-items: center;
             gap: 8px;
+            letter-spacing: -0.01em;
         }
+        .card-title i { color: var(--primary); }
 
-        /* ── Stats ── */
+        /* ── Stats Cards ── */
         .stats-container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: clamp(8px, 2vw, 16px);
+            grid-template-columns: repeat(2, 1fr);
+            gap: clamp(8px, 2vw, 14px);
             margin-bottom: clamp(16px, 3vw, 24px);
         }
-
-        @media (max-width: 380px) {
-            .stats-container { grid-template-columns: 1fr; }
+        @media (min-width: 480px) {
+            .stats-container { grid-template-columns: repeat(4, 1fr); }
         }
 
         .stat-box {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: clamp(12px, 3vw, 20px) clamp(8px, 2vw, 16px);
-            border-radius: clamp(8px, 2vw, 12px);
+            padding: clamp(12px, 3vw, 18px) clamp(10px, 2vw, 16px);
+            border-radius: var(--radius-sm);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid transparent;
         }
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.12;
+            border-radius: inherit;
+        }
+        .stat-box:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+        .stat-box.s-primary { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; }
+        .stat-box.s-teal    { background: linear-gradient(135deg, #0891B2, #06B6D4); color: white; }
+        .stat-box.s-pink    { background: linear-gradient(135deg, #DB2777, #EC4899); color: white; }
+        .stat-box.s-amber   { background: linear-gradient(135deg, #D97706, #F59E0B); color: white; }
 
         .stat-box h3 {
-            font-size: clamp(1.3rem, 5vw, 2rem);
-            font-weight: 700;
-            margin: 4px 0;
-            line-height: 1.1;
+            font-size: clamp(1.4rem, 5vw, 2.1rem);
+            font-weight: 800;
+            margin: 4px 0 2px;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            transition: all 0.5s;
         }
         .stat-box p {
-            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            font-size: clamp(0.65rem, 1.8vw, 0.78rem);
             opacity: 0.9;
-            line-height: 1.3;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .stat-box .stat-icon {
+            position: absolute;
+            right: 10px; top: 10px;
+            opacity: 0.25;
+            font-size: 1.6rem;
         }
 
-        /* ── Subject Table – becomes card-style on mobile ── */
+        /* ── Subject Table ── */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 -4px;
+            padding: 0 4px;
+        }
         .subject-list {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            min-width: 480px;
         }
-
-        /* Hide table on very small screens, show card rows instead */
-        .subject-list thead { display: table-header-group; }
-        .subject-list tbody { display: table-row-group; }
 
         .subject-list th {
             text-align: left;
-            color: var(--text-light);
-            font-size: 0.8rem;
-            padding: 8px 8px;
-            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            padding: 8px 10px;
+            border-bottom: 2px solid var(--border-solid);
             white-space: nowrap;
+            background: var(--bg);
         }
+        .subject-list th:first-child { border-radius: 8px 0 0 8px; }
+        .subject-list th:last-child  { border-radius: 0 8px 8px 0; }
 
         .subject-list td {
-            padding: clamp(8px, 2vw, 12px) 8px;
+            padding: 10px 10px;
             border-bottom: 1px solid var(--border);
-            font-size: clamp(0.82rem, 2.5vw, 0.95rem);
+            font-size: clamp(0.8rem, 2.3vw, 0.9rem);
             vertical-align: middle;
         }
+
+        .subject-row {
+            transition: background 0.2s;
+        }
+        .subject-row:hover { background: rgba(79,70,229,0.04); }
 
         .subject-row input {
             background: transparent;
             border: none;
             color: var(--text);
             font-family: inherit;
-            font-size: clamp(0.82rem, 2.5vw, 0.95rem);
+            font-size: clamp(0.8rem, 2.3vw, 0.9rem);
             width: 100%;
-            padding: 4px;
+            padding: 4px 6px;
+            border-radius: 6px;
             min-width: 0;
+            transition: 0.2s;
         }
-        .subject-row input:focus { outline: none; border-bottom: 1px solid var(--primary); }
-        .subject-row input[type="number"] { max-width: 60px; }
+        .subject-row input:focus { outline: none; background: rgba(79,70,229,0.08); }
+        .subject-row input[type="number"] { max-width: 58px; text-align: center; }
+        .subject-row input[type="number"].dl-input:focus { background: rgba(245,158,11,0.1); }
 
-        /* Mobile: stack table as card rows */
-        @media (max-width: 560px) {
-            .subject-list thead { display: none; }
-            .subject-list, .subject-list tbody, .subject-row {
-                display: block;
-                width: 100%;
-            }
-            .subject-row {
-                background: var(--bg);
-                border-radius: 10px;
-                padding: 12px;
-                margin-bottom: 10px;
-                border: 1px solid var(--border);
-                position: relative;
-                display: grid;
-                grid-template-columns: 1fr auto auto auto auto;
-                align-items: center;
-                gap: 8px;
-            }
-            .subject-row td {
-                border: none;
-                padding: 0;
-                display: contents;
-            }
-            /* Name spans full row on its own line */
-            .subject-row td:first-child {
-                display: block;
-                grid-column: 1 / -1;
-                border-bottom: 1px solid var(--border);
-                padding-bottom: 8px;
-                margin-bottom: 4px;
-            }
-            .subject-row td:first-child input {
-                font-weight: 600;
-                font-size: 0.95rem;
-            }
-            /* Number inputs row */
-            .subject-row td:nth-child(2),
-            .subject-row td:nth-child(3) {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 2px;
-            }
-            .subject-row td:nth-child(2)::before { content: "Attended"; font-size: 0.7rem; color: var(--text-light); }
-            .subject-row td:nth-child(3)::before { content: "Total"; font-size: 0.7rem; color: var(--text-light); }
-            .subject-row input[type="number"] { text-align: center; max-width: 50px; }
-            .subject-row td:nth-child(4) { display: flex; align-items: center; justify-content: center; }
-            .subject-row td:nth-child(5) { display: flex; align-items: center; justify-content: flex-end; }
+        .th-dl {
+            display: flex; align-items: center; gap: 4px;
         }
+        .th-dl .info-icon {
+            color: var(--dl-color);
+            cursor: help;
+            font-size: 0.8rem;
+            position: relative;
+        }
+
+        /* Tooltip */
+        .tooltip-wrap { position: relative; display: inline-flex; align-items: center; }
+        .tooltip-wrap .tip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: var(--card-bg);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            white-space: nowrap;
+            transition: 0.22s;
+            pointer-events: none;
+            z-index: 99;
+            box-shadow: var(--shadow);
+            font-weight: 500;
+        }
+        .tooltip-wrap .tip::after {
+            content: '';
+            position: absolute;
+            top: 100%; left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: var(--text);
+        }
+        .tooltip-wrap:hover .tip { visibility: visible; opacity: 1; bottom: calc(100% + 12px); }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: clamp(0.65rem, 1.8vw, 0.73rem);
+            font-weight: 700;
+            white-space: nowrap;
+            display: inline-flex; align-items: center; gap: 4px;
+        }
+        .status-safe   { background: rgba(16,185,129,0.12); color: #059669; border: 1px solid rgba(16,185,129,0.2); }
+        .status-warn   { background: rgba(245,158,11,0.12); color: #B45309; border: 1px solid rgba(245,158,11,0.2); }
+        .status-crit   { background: rgba(239,68,68,0.12);  color: #DC2626; border: 1px solid rgba(239,68,68,0.2); }
 
         .btn-icon {
             background: transparent;
             border: none;
-            color: var(--text-light);
+            color: var(--text-muted);
             cursor: pointer;
             transition: 0.2s;
-            font-size: 1rem;
-            padding: 4px 6px;
-            border-radius: 4px;
+            font-size: 0.9rem;
+            padding: 5px 7px;
+            border-radius: 6px;
             flex-shrink: 0;
         }
-        .btn-icon:hover { color: var(--danger); background: rgba(214,48,49,0.08); }
-        
-        .status-badge {
-            padding: 3px 8px;
-            border-radius: 20px;
-            font-size: clamp(0.68rem, 2vw, 0.75rem);
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        .status-good { background: rgba(0, 184, 148, 0.15); color: var(--success); }
-        .status-warn { background: rgba(253, 203, 110, 0.15); color: #e1b12c; }
-        .status-bad  { background: rgba(214, 48, 49, 0.15);  color: var(--danger); }
+        .btn-icon:hover { color: var(--danger); background: rgba(239,68,68,0.1); }
 
-        /* ── Inputs ── */
+        /* ── Add Subject ── */
         .input-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 16px;
-            flex-wrap: wrap;
+            display: flex; gap: 10px;
+            margin-top: 16px; flex-wrap: wrap;
         }
-        
+
         .styled-input {
-            flex: 1;
-            min-width: 0;
-            padding: clamp(10px, 2.5vw, 12px);
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
+            flex: 1; min-width: 0;
+            padding: clamp(10px, 2.5vw, 12px) 14px;
+            border: 1.5px solid var(--border-solid);
+            border-radius: var(--radius-sm);
             background: var(--bg);
             color: var(--text);
             font-family: inherit;
-            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+            font-size: clamp(0.85rem, 2.5vw, 0.93rem);
             transition: var(--transition);
+            font-weight: 500;
         }
-        .styled-input:focus { outline: none; border-color: var(--primary); }
+        .styled-input:focus { outline: none; border-color: var(--primary); background: var(--card-bg); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
 
         .btn-primary {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             border: none;
             padding: clamp(10px, 2.5vw, 12px) clamp(16px, 3vw, 22px);
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 700;
             font-family: inherit;
-            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            font-size: clamp(0.85rem, 2.5vw, 0.93rem);
+            transition: var(--transition);
+            display: flex; align-items: center; justify-content: center; gap: 6px;
             white-space: nowrap;
+            box-shadow: 0 4px 14px rgba(79,70,229,0.3);
         }
-        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(79,70,229,0.4); }
         .btn-primary:active { transform: translateY(0); }
+
+        .btn-danger {
+            background: transparent;
+            border: 1.5px solid var(--border-solid);
+            color: var(--text-light);
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .btn-danger:hover { border-color: var(--danger); color: var(--danger); background: rgba(239,68,68,0.06); }
 
         /* ── Quick Tools / Tabs ── */
         .section-divider {
-            margin-top: clamp(18px, 3vw, 25px);
-            padding-top: clamp(16px, 3vw, 20px);
+            margin-top: clamp(18px, 3vw, 26px);
+            padding-top: clamp(16px, 3vw, 22px);
             border-top: 1px solid var(--border);
         }
 
+        .tabs-wrapper { position: relative; }
+        .tabs-wrapper::after {
+            content: "";
+            position: absolute;
+            right: 0; top: 0; bottom: 4px;
+            width: 40px;
+            background: linear-gradient(to right, transparent, var(--card-bg));
+            pointer-events: none;
+        }
+
         .tabs-container {
-            display: flex;
-            gap: 8px;
+            display: flex; gap: 6px;
             margin: clamp(12px, 2vw, 16px) 0;
-            overflow-x: auto;
-            padding-bottom: 4px;
+            overflow-x: auto; padding-bottom: 4px;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
         }
         .tabs-container::-webkit-scrollbar { display: none; }
 
         .tab-btn {
-            padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 18px);
+            padding: 8px clamp(12px, 2.5vw, 18px);
             background: var(--bg);
-            border: 1.5px solid transparent;
+            border: 1.5px solid var(--border-solid);
             border-radius: 8px;
             color: var(--text-light);
             cursor: pointer;
             white-space: nowrap;
-            font-weight: 500;
+            font-weight: 600;
             font-family: inherit;
-            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
-            transition: 0.25s;
+            font-size: clamp(0.78rem, 2.3vw, 0.86rem);
+            transition: var(--transition);
         }
-        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-        .tab-btn:not(.active):hover { border-color: var(--primary); color: var(--primary); }
+        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px rgba(79,70,229,0.3); }
+        .tab-btn:not(.active):hover { border-color: var(--primary); color: var(--primary); background: rgba(79,70,229,0.06); }
 
         .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.25s ease; }
+        .tab-content.active { display: block; animation: fadeSlide 0.28s ease; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(10px); }
             to   { opacity: 1; transform: translateY(0); }
         }
 
@@ -370,154 +461,215 @@
         .calc-box {
             background: var(--bg);
             padding: clamp(14px, 3vw, 20px);
-            border-radius: 12px;
+            border-radius: var(--radius-sm);
             margin-top: 4px;
+            border: 1px solid var(--border);
         }
-        .calc-box p { font-size: clamp(0.8rem, 2.5vw, 0.9rem); margin-bottom: 12px; color: var(--text-light); }
+        .calc-box p { font-size: clamp(0.8rem, 2.3vw, 0.88rem); margin-bottom: 12px; color: var(--text-light); font-weight: 500; }
 
         .calc-result {
-            margin-top: 16px;
-            padding: clamp(12px, 3vw, 15px);
-            border-radius: 8px;
+            margin-top: 14px;
+            padding: clamp(12px, 3vw, 16px);
+            border-radius: var(--radius-sm);
             background: var(--card-bg);
             border-left: 4px solid var(--primary);
+            animation: fadeSlide 0.25s ease;
         }
-        .calc-result h4 { margin-bottom: 8px; color: var(--primary); font-size: clamp(0.9rem, 2.5vw, 1rem); }
-        .calc-result p  { font-size: clamp(0.82rem, 2.5vw, 0.9rem); margin-bottom: 4px; color: var(--text); }
+        .calc-result h4 { margin-bottom: 8px; color: var(--primary); font-size: clamp(0.88rem, 2.5vw, 0.98rem); font-weight: 700; }
+        .calc-result p  { font-size: clamp(0.8rem, 2.3vw, 0.88rem); margin-bottom: 4px; color: var(--text); }
 
         .day-skip-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 12px;
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 10px; margin-bottom: 12px;
         }
 
         /* ── Progress Bar ── */
         .progress-container {
             height: 8px;
-            background: var(--border);
-            border-radius: 4px;
+            background: var(--border-solid);
+            border-radius: 99px;
             overflow: hidden;
             margin-top: 10px;
         }
         .progress-bar {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.6s ease, background 0.4s ease;
+            height: 100%; border-radius: 99px;
+            transition: width 0.7s cubic-bezier(0.4,0,0.2,1), background 0.4s ease;
+            position: relative;
+        }
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            from { transform: translateX(-100%); }
+            to   { transform: translateX(300%); }
         }
 
         /* ── Side Panel ── */
-        .side-section { margin-bottom: clamp(20px, 3vw, 28px); }
+        .side-section { margin-bottom: clamp(18px, 3vw, 24px); }
         .side-section:last-child { margin-bottom: 0; }
 
         .target-box {
-            padding: clamp(12px, 3vw, 15px);
+            padding: clamp(12px, 3vw, 16px);
             background: var(--bg);
-            border-radius: 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
         }
 
         .target-slider-row {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            margin-top: 12px;
+            display: flex; gap: 12px; align-items: center; margin-top: 12px;
         }
 
         input[type="range"] {
-            flex: 1;
-            accent-color: var(--primary);
-            cursor: pointer;
-            min-width: 0;
+            flex: 1; accent-color: var(--primary);
+            cursor: pointer; min-width: 0;
+            height: 4px; border-radius: 99px;
         }
 
         .tips-box {
-            padding: clamp(12px, 3vw, 15px);
-            background: linear-gradient(135deg, rgba(108,92,231,0.1), rgba(0,206,201,0.1));
-            border-radius: 12px;
+            padding: clamp(12px, 3vw, 16px);
+            background: linear-gradient(135deg, rgba(79,70,229,0.08), rgba(6,182,212,0.06));
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(79,70,229,0.12);
         }
-
-        .tips-box ul {
-            list-style: none;
-            padding: 0;
-            margin-top: 10px;
-        }
+        .tips-box ul { list-style: none; padding: 0; margin-top: 10px; }
         .tips-box ul li {
-            font-size: clamp(0.8rem, 2.5vw, 0.85rem);
-            color: var(--text-light);
-            margin-bottom: 8px;
-            padding-left: 18px;
-            position: relative;
+            font-size: clamp(0.78rem, 2.3vw, 0.84rem);
+            color: var(--text-light); margin-bottom: 8px;
+            padding-left: 20px; position: relative; font-weight: 500;
         }
-        .tips-box ul li::before {
-            content: "→";
-            position: absolute;
-            left: 0;
-            color: var(--primary);
+        .tips-box ul li::before { content: "→"; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+
+        /* ── Subject Breakdown ── */
+        .breakdown-item {
+            margin-bottom: 14px;
+            animation: fadeSlide 0.3s ease;
         }
+        .breakdown-header {
+            display: flex; justify-content: space-between;
+            font-size: 0.82rem; margin-bottom: 4px; align-items: center; gap: 8px;
+        }
+        .breakdown-name {
+            flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            font-weight: 600;
+        }
+        .breakdown-meta {
+            font-size: 0.7rem; color: var(--text-muted);
+            display: flex; gap: 6px; flex-shrink: 0;
+        }
+        .breakdown-pct { font-weight: 700; flex-shrink: 0; }
 
         /* ── Footer ── */
         .footer {
             text-align: center;
-            padding: clamp(20px, 4vw, 30px);
-            margin-top: clamp(30px, 5vw, 50px);
-            color: var(--text-light);
-            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+            padding: clamp(24px, 4vw, 36px) clamp(16px, 4vw, 24px);
+            margin-top: clamp(24px, 4vw, 40px);
+            border-top: 1px solid var(--border);
         }
+        .footer-brand {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+        .footer-sub {
+            font-size: clamp(0.78rem, 2.3vw, 0.88rem);
+            color: var(--text-muted); font-weight: 500;
+        }
+        .footer-sub span { color: var(--primary); font-weight: 700; }
 
-        /* ── Tooltip ── */
-        .tooltip { position: relative; cursor: help; }
-        .tooltip::after {
-            content: attr(data-tip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--text);
-            color: var(--bg);
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.72rem;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: 0.25s;
-            z-index: 99;
+        /* ── DL badge ── */
+        .dl-badge {
+            display: inline-flex; align-items: center; gap: 3px;
+            background: rgba(245,158,11,0.12);
+            color: #B45309;
+            border: 1px solid rgba(245,158,11,0.25);
+            padding: 2px 7px;
+            border-radius: 20px;
+            font-size: 0.68rem;
+            font-weight: 700;
         }
-        .tooltip:hover::after { opacity: 1; bottom: 110%; }
-
-        /* ── Scroll indicator for tabs on mobile ── */
-        .tabs-wrapper {
-            position: relative;
-        }
-        .tabs-wrapper::after {
-            content: "";
-            position: absolute;
-            right: 0; top: 0; bottom: 4px;
-            width: 30px;
-            background: linear-gradient(to right, transparent, var(--card-bg));
-            pointer-events: none;
-        }
+        [data-theme="dark"] .dl-badge { color: var(--dl-color); }
 
         /* ── Empty state ── */
         .empty-state {
-            text-align: center;
-            padding: 24px 0;
-            color: var(--text-light);
-            font-size: 0.9rem;
+            text-align: center; padding: 28px 0;
+            color: var(--text-muted); font-size: 0.88rem; font-weight: 500;
         }
-        .empty-state i { font-size: 2rem; margin-bottom: 10px; opacity: 0.4; display: block; }
+        .empty-state i { font-size: 2.2rem; margin-bottom: 10px; opacity: 0.35; display: block; }
+
+        /* ── Number animation ── */
+        @keyframes countUp {
+            from { transform: translateY(8px); opacity: 0; }
+            to   { transform: translateY(0); opacity: 1; }
+        }
+        .count-animate { animation: countUp 0.4s ease; }
+
+        /* ── Mobile card-style table ── */
+        @media (max-width: 600px) {
+            .table-wrapper { overflow-x: visible; }
+            .subject-list { min-width: 0; }
+            .subject-list thead { display: none; }
+            .subject-list, .subject-list tbody { display: block; width: 100%; }
+            .subject-row {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                grid-template-rows: auto auto auto;
+                background: var(--bg);
+                border-radius: var(--radius-sm);
+                padding: 12px 14px;
+                margin-bottom: 10px;
+                border: 1px solid var(--border);
+                gap: 6px;
+            }
+            .subject-row td { border: none; padding: 0; display: contents; }
+            .subject-row td:nth-child(1) {
+                display: block; grid-column: 1/-1;
+                border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 2px;
+            }
+            .subject-row td:nth-child(1) input { font-weight: 700; font-size: 0.95rem; }
+            .mobile-fields {
+                display: flex; gap: 10px; align-items: center;
+                grid-column: 1/-1; flex-wrap: wrap;
+            }
+            .mobile-field {
+                display: flex; flex-direction: column; align-items: center;
+                background: var(--card-bg); padding: 6px 10px;
+                border-radius: 8px; min-width: 60px;
+                border: 1px solid var(--border);
+            }
+            .mobile-field-label { font-size: 0.62rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+            .mobile-field input[type="number"] { max-width: 50px; text-align: center; font-weight: 700; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-solid); border-radius: 99px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        .subject-list-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
+        }
     </style>
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="logo">
-            <i class="fas fa-graduation-cap"></i>
+            <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
             LPU Pro Tracker
         </div>
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-            <i class="fas fa-moon" id="theme-icon"></i>
-        </button>
+        <div class="nav-actions">
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
+        </div>
     </nav>
 
     <div class="container">
@@ -527,51 +679,75 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">
-                        <i class="fas fa-calculator"></i> Attendance Dashboard
+                        <i class="fas fa-chart-line"></i> Attendance Dashboard
                     </div>
-                    <button class="btn-icon tooltip" onclick="resetAll()" data-tip="Reset all data">
-                        <i class="fas fa-trash-alt"></i>
+                    <button class="btn-danger" onclick="resetAll()">
+                        <i class="fas fa-rotate-left"></i> Reset
                     </button>
                 </div>
 
                 <!-- Stats -->
                 <div class="stats-container">
-                    <div class="stat-box">
+                    <div class="stat-box s-primary">
+                        <i class="fas fa-percent stat-icon"></i>
                         <p>Overall</p>
                         <h3 id="overall-percent">0%</h3>
                     </div>
-                    <div class="stat-box" style="background: linear-gradient(135deg, #00CEC9 0%, #00b894 100%);">
+                    <div class="stat-box s-teal">
+                        <i class="fas fa-calendar stat-icon"></i>
                         <p>Total</p>
                         <h3 id="total-classes">0</h3>
                     </div>
-                    <div class="stat-box" style="background: linear-gradient(135deg, #FD79A8 0%, #e84393 100%);">
+                    <div class="stat-box s-pink">
+                        <i class="fas fa-check stat-icon"></i>
                         <p>Attended</p>
                         <h3 id="attended-classes">0</h3>
                     </div>
+                    <div class="stat-box s-amber">
+                        <i class="fas fa-shield-halved stat-icon"></i>
+                        <p>DL Classes</p>
+                        <h3 id="dl-classes">0</h3>
+                    </div>
                 </div>
 
-                <!-- Subject List -->
-                <div class="card-title" style="font-size:0.95rem; margin-bottom:12px;">
-                    <i class="fas fa-book"></i> Your Subjects
+                <!-- Subject Table -->
+                <div class="subject-list-header">
+                    <div class="card-title" style="font-size:0.9rem; margin-bottom:0;">
+                        <i class="fas fa-book"></i> Your Subjects
+                    </div>
+                    <div style="font-size:0.75rem; color:var(--text-muted); font-weight:500;">
+                        <i class="fas fa-save" style="color:var(--success); margin-right:4px;"></i>Auto-saved
+                    </div>
                 </div>
 
-                <table class="subject-list">
-                    <thead>
-                        <tr>
-                            <th style="width:40%">Subject</th>
-                            <th style="width:18%">Attended</th>
-                            <th style="width:18%">Total</th>
-                            <th style="width:16%">Status</th>
-                            <th style="width:8%"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="subject-tbody"></tbody>
-                </table>
+                <div class="table-wrapper">
+                    <table class="subject-list">
+                        <thead>
+                            <tr>
+                                <th style="width:36%">Subject</th>
+                                <th style="width:14%">Attended</th>
+                                <th style="width:14%">
+                                    <div class="th-dl">
+                                        DL
+                                        <div class="tooltip-wrap">
+                                            <i class="fas fa-circle-info info-icon"></i>
+                                            <span class="tip">Duty Leave classes are counted as attended.</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th style="width:14%">Total</th>
+                                <th style="width:16%">Status</th>
+                                <th style="width:6%"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="subject-tbody"></tbody>
+                    </table>
+                </div>
 
                 <!-- Add Subject -->
                 <div class="input-group">
                     <input type="text" id="new-subject" class="styled-input"
-                        placeholder="Subject name..." 
+                        placeholder="Enter subject name..."
                         onkeydown="if(event.key==='Enter') addSubject()">
                     <button class="btn-primary" onclick="addSubject()">
                         <i class="fas fa-plus"></i> Add
@@ -580,24 +756,24 @@
 
                 <!-- Quick Tools -->
                 <div class="section-divider">
-                    <div class="card-title" style="font-size:0.95rem; margin-bottom:0;">
+                    <div class="card-title" style="font-size:0.92rem; margin-bottom:0;">
                         <i class="fas fa-bolt"></i> Quick Tools
                     </div>
 
                     <div class="tabs-wrapper">
                         <div class="tabs-container">
-                            <button class="tab-btn active" onclick="switchTab('bunk', this)">Bunk Estimator</button>
-                            <button class="tab-btn" onclick="switchTab('requirement', this)">Requirement</button>
-                            <button class="tab-btn" onclick="switchTab('day-skip', this)">Day Skip</button>
+                            <button class="tab-btn active" onclick="switchTab('bunk', this)"><i class="fas fa-couch"></i> Bunk Estimator</button>
+                            <button class="tab-btn" onclick="switchTab('requirement', this)"><i class="fas fa-book-open"></i> Requirement</button>
+                            <button class="tab-btn" onclick="switchTab('day-skip', this)"><i class="fas fa-calendar-xmark"></i> Day Skip</button>
                         </div>
                     </div>
 
                     <!-- Bunk -->
                     <div id="bunk" class="tab-content active">
                         <div class="calc-box">
-                            <p>How many classes can you skip while maintaining your target?</p>
-                            <div class="input-group">
-                                <input type="number" id="bunk-target" class="styled-input" placeholder="Target % (e.g. 75)">
+                            <p>How many classes can you skip while maintaining your target attendance? (DL included)</p>
+                            <div class="input-group" style="margin-top:0;">
+                                <input type="number" id="bunk-target" class="styled-input" placeholder="Target % (e.g. 75)" style="max-width:200px;">
                                 <button class="btn-primary" onclick="calculateBunk()">Calculate</button>
                             </div>
                             <div id="bunk-result" class="calc-result" style="display:none;"></div>
@@ -607,9 +783,9 @@
                     <!-- Requirement -->
                     <div id="requirement" class="tab-content">
                         <div class="calc-box">
-                            <p>How many more classes do you need to attend?</p>
-                            <div class="input-group">
-                                <input type="number" id="req-target" class="styled-input" placeholder="Target % (e.g. 80)">
+                            <p>How many more classes do you need to attend? (DL counts as attended)</p>
+                            <div class="input-group" style="margin-top:0;">
+                                <input type="number" id="req-target" class="styled-input" placeholder="Target % (e.g. 80)" style="max-width:200px;">
                                 <button class="btn-primary" onclick="calculateRequirement()">Calculate</button>
                             </div>
                             <div id="req-result" class="calc-result" style="display:none;"></div>
@@ -619,13 +795,13 @@
                     <!-- Day Skip -->
                     <div id="day-skip" class="tab-content">
                         <div class="calc-box">
-                            <p>Calculate attendance impact after skipping days.</p>
+                            <p>Calculate attendance impact if you skip upcoming days. (DL included in current effective attendance)</p>
                             <div class="day-skip-grid">
-                                <input type="number" id="skip-per-day" class="styled-input" placeholder="Classes/day">
+                                <input type="number" id="skip-per-day" class="styled-input" placeholder="Classes / day">
                                 <input type="number" id="skip-days"    class="styled-input" placeholder="Days to skip">
                             </div>
                             <button class="btn-primary" style="width:100%; justify-content:center;" onclick="calculateDaySkip()">
-                                Calculate Impact
+                                <i class="fas fa-chart-bar"></i> Calculate Impact
                             </button>
                             <div id="day-skip-result" class="calc-result" style="display:none;"></div>
                         </div>
@@ -643,32 +819,36 @@
 
                 <!-- Progress -->
                 <div class="side-section">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:0.9rem;">Overall Progress</span>
-                        <span id="progress-text" style="font-weight:600; color:var(--primary);">0%</span>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+                        <span style="font-size:0.88rem; font-weight:600;">Overall Progress</span>
+                        <span id="progress-text" style="font-weight:800; color:var(--primary); font-size:1rem;">0%</span>
                     </div>
-                    <div class="progress-container">
+                    <div class="progress-container" style="height:10px;">
                         <div id="main-progress-bar" class="progress-bar" style="width:0%; background:var(--primary);"></div>
+                    </div>
+                    <div style="font-size:0.72rem; color:var(--text-muted); margin-top:6px; font-weight:500;">
+                        <i class="fas fa-shield-halved" style="color:var(--dl-color); margin-right:3px;"></i>
+                        DL classes are included in effective attendance
                     </div>
                 </div>
 
                 <!-- Target -->
                 <div class="side-section target-box">
-                    <div class="card-title" style="font-size:0.9rem;">
+                    <div class="card-title" style="font-size:0.88rem;">
                         <i class="fas fa-bullseye"></i> Set Target
                     </div>
                     <div class="target-slider-row">
                         <input type="range" id="target-slider" min="50" max="100" value="75" oninput="updateTargetDisplay()">
-                        <span id="target-display" style="font-weight:600; color:var(--primary); min-width:42px; text-align:right;">75%</span>
+                        <span id="target-display" style="font-weight:800; color:var(--primary); min-width:44px; text-align:right; font-size:1.05rem;">75%</span>
                     </div>
-                    <p style="font-size:0.78rem; color:var(--text-light); margin-top:8px;">
-                        <i class="fas fa-info-circle"></i> LPU requires minimum 75%.
+                    <p style="font-size:0.75rem; color:var(--text-muted); margin-top:8px; font-weight:500;">
+                        <i class="fas fa-info-circle" style="color:var(--primary);"></i> LPU requires minimum 75%.
                     </p>
                 </div>
 
                 <!-- Subject Breakdown -->
                 <div class="side-section">
-                    <div class="card-title" style="font-size:0.9rem; margin-bottom:12px;">
+                    <div class="card-title" style="font-size:0.88rem; margin-bottom:14px;">
                         <i class="fas fa-chart-bar"></i> Subject Status
                     </div>
                     <div id="subject-breakdown">
@@ -681,13 +861,14 @@
 
                 <!-- Tips -->
                 <div class="tips-box">
-                    <div class="card-title" style="font-size:0.9rem;">
+                    <div class="card-title" style="font-size:0.88rem;">
                         <i class="fas fa-lightbulb"></i> Pro Tips
                     </div>
                     <ul>
-                        <li>Maintain 80%+ to stay safe</li>
-                        <li>Lab attendance is crucial</li>
-                        <li>Don't miss the first class</li>
+                        <li>Maintain 80%+ for a safety buffer</li>
+                        <li>Lab attendance is crucial — never miss</li>
+                        <li>Apply for DL before the class date</li>
+                        <li>Don't miss the very first class of semester</li>
                     </ul>
                 </div>
             </div>
@@ -696,21 +877,42 @@
     </div>
 
     <div class="footer">
-        <p>&copy; 2026 LPU Pro Attendance Tracker. Built for students by students.</p>
-        <p style="margin-top:4px;"><i class="fas fa-graduation-cap"></i> All the best for your exams!</p>
+        <div class="footer-brand">
+            <i class="fas fa-graduation-cap" style="margin-right:8px; color:var(--primary);"></i>LPU Pro Attendance Tracker
+        </div>
+        <div class="footer-sub">
+            Built by <span>Sujay Banarjee</span> | B.Tech CSE Student
+        </div>
     </div>
 
     <script>
         // ── State ──
-        let subjects = JSON.parse(localStorage.getItem('lpuSubjects')) || [
-            { id: 1, name: 'CSE205 - DSA',  attended: 0, total: 0 },
-            { id: 2, name: 'CSE201 - OOPS', attended: 0, total: 0 },
-            { id: 3, name: 'MATH203 - M3',  attended: 0, total: 0 }
-        ];
-        let targetAttendance = parseInt(localStorage.getItem('lpuTarget')) || 75;
+        let subjects = [];
+        let targetAttendance = 75;
+
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('lpuSubjects_v2');
+                subjects = saved ? JSON.parse(saved) : [
+                    { id: 1, name: 'CSE205 - DSA',  attended: 0, dl: 0, total: 0 },
+                    { id: 2, name: 'CSE201 - OOPS', attended: 0, dl: 0, total: 0 },
+                    { id: 3, name: 'MATH203 - M3',  attended: 0, dl: 0, total: 0 }
+                ];
+                // Migrate old data (no dl field)
+                subjects = subjects.map(s => ({ ...s, dl: s.dl || 0 }));
+            } catch(e) {
+                subjects = [
+                    { id: 1, name: 'CSE205 - DSA',  attended: 0, dl: 0, total: 0 },
+                    { id: 2, name: 'CSE201 - OOPS', attended: 0, dl: 0, total: 0 },
+                    { id: 3, name: 'MATH203 - M3',  attended: 0, dl: 0, total: 0 }
+                ];
+            }
+            targetAttendance = parseInt(localStorage.getItem('lpuTarget')) || 75;
+        }
 
         // ── Init ──
         document.addEventListener('DOMContentLoaded', () => {
+            loadData();
             const slider = document.getElementById('target-slider');
             slider.value = targetAttendance;
             document.getElementById('target-display').textContent = targetAttendance + '%';
@@ -739,32 +941,53 @@
             }
         }
 
+        // ── Animated Counter ──
+        function animateNumber(el, target, suffix = '') {
+            const start = parseFloat(el.textContent) || 0;
+            const end   = parseFloat(target) || 0;
+            if (start === end) { el.textContent = target + suffix; return; }
+            const dur = 500, step = 16;
+            const steps = dur / step;
+            const inc = (end - start) / steps;
+            let cur = start, count = 0;
+            el.classList.remove('count-animate');
+            void el.offsetWidth;
+            el.classList.add('count-animate');
+            const timer = setInterval(() => {
+                cur += inc; count++;
+                if (count >= steps) { clearInterval(timer); el.textContent = target + suffix; return; }
+                el.textContent = (Number.isInteger(end) ? Math.round(cur) : cur.toFixed(1)) + suffix;
+            }, step);
+        }
+
         // ── Render Subjects ──
         function renderSubjects() {
             const tbody = document.getElementById('subject-tbody');
             tbody.innerHTML = '';
 
             if (subjects.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><i class="fas fa-book-open"></i>No subjects yet — add one below!</div></td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><i class="fas fa-book-open"></i>No subjects yet — add one below!</div></td></tr>`;
                 updateStats();
                 updateBreakdown();
                 return;
             }
 
-            subjects.forEach((subject, index) => {
-                const percent = subject.total > 0 ? Math.round((subject.attended / subject.total) * 100) : 0;
-                let statusClass = 'status-bad', statusText = 'Critical';
-                if      (percent >= targetAttendance)      { statusClass = 'status-good'; statusText = 'Safe'; }
-                else if (percent >= targetAttendance - 10) { statusClass = 'status-warn'; statusText = 'Warn'; }
+            subjects.forEach((s, i) => {
+                const eff     = s.attended + s.dl;
+                const percent = s.total > 0 ? Math.round((eff / s.total) * 100) : 0;
+                let statusClass = 'status-crit', statusText = '⚠ Critical';
+                if      (percent >= targetAttendance)      { statusClass = 'status-safe'; statusText = '✓ Safe'; }
+                else if (percent >= targetAttendance - 10) { statusClass = 'status-warn'; statusText = '~ Warning'; }
 
                 const row = document.createElement('tr');
                 row.className = 'subject-row';
                 row.innerHTML = `
-                    <td><input type="text" value="${subject.name}" onchange="updateSubject(${index},'name',this.value)" placeholder="Subject Name"></td>
-                    <td><input type="number" value="${subject.attended}" min="0" onchange="updateSubject(${index},'attended',this.value)" placeholder="0"></td>
-                    <td><input type="number" value="${subject.total}"    min="0" onchange="updateSubject(${index},'total',this.value)"    placeholder="0"></td>
-                    <td><span class="status-badge ${statusClass}">${percent}%</span></td>
-                    <td><button class="btn-icon" onclick="deleteSubject(${index})" aria-label="Delete"><i class="fas fa-times"></i></button></td>
+                    <td><input type="text" value="${escHtml(s.name)}" onchange="updateSubject(${i},'name',this.value)" placeholder="Subject Name"></td>
+                    <td><input type="number" value="${s.attended}" min="0" onchange="updateSubject(${i},'attended',this.value)" placeholder="0"></td>
+                    <td><input type="number" value="${s.dl}" min="0" onchange="updateSubject(${i},'dl',this.value)" placeholder="0" class="dl-input" style="color:var(--dl-color);font-weight:700;"></td>
+                    <td><input type="number" value="${s.total}" min="0" onchange="updateSubject(${i},'total',this.value)" placeholder="0"></td>
+                    <td><span class="status-badge ${statusClass}">${statusText} ${percent}%</span></td>
+                    <td><button class="btn-icon" onclick="deleteSubject(${i})" aria-label="Delete"><i class="fas fa-times"></i></button></td>
                 `;
                 tbody.appendChild(row);
             });
@@ -774,11 +997,15 @@
             updateBreakdown();
         }
 
+        function escHtml(str) {
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
         function addSubject() {
             const input = document.getElementById('new-subject');
-            const name = input.value.trim();
+            const name  = input.value.trim();
             if (name) {
-                subjects.push({ id: Date.now(), name, attended: 0, total: 0 });
+                subjects.push({ id: Date.now(), name, attended: 0, dl: 0, total: 0 });
                 input.value = '';
                 renderSubjects();
             }
@@ -786,9 +1013,8 @@
 
         function updateSubject(index, field, value) {
             subjects[index][field] = (field === 'name') ? value : (parseInt(value) || 0);
-            // debounced re-render to avoid cursor jump
             clearTimeout(updateSubject._t);
-            updateSubject._t = setTimeout(() => { saveData(); updateStats(); updateBreakdown(); }, 200);
+            updateSubject._t = setTimeout(() => { saveData(); updateStats(); updateBreakdown(); }, 220);
         }
 
         function deleteSubject(index) {
@@ -798,9 +1024,9 @@
         function resetAll() {
             if (confirm('Reset all data? This cannot be undone.')) {
                 subjects = [
-                    { id: 1, name: 'Subject 1', attended: 0, total: 0 },
-                    { id: 2, name: 'Subject 2', attended: 0, total: 0 },
-                    { id: 3, name: 'Subject 3', attended: 0, total: 0 }
+                    { id: 1, name: 'Subject 1', attended: 0, dl: 0, total: 0 },
+                    { id: 2, name: 'Subject 2', attended: 0, dl: 0, total: 0 },
+                    { id: 3, name: 'Subject 3', attended: 0, dl: 0, total: 0 }
                 ];
                 renderSubjects();
             }
@@ -808,27 +1034,34 @@
 
         // ── Stats ──
         function updateStats() {
-            let totalAttended = 0, totalClasses = 0;
-            subjects.forEach(s => { totalAttended += s.attended; totalClasses += s.total; });
+            let totalAttended = 0, totalDL = 0, totalClasses = 0;
+            subjects.forEach(s => {
+                totalAttended += s.attended;
+                totalDL      += s.dl;
+                totalClasses += s.total;
+            });
+            const effectiveAttended = totalAttended + totalDL;
+            const overallPercent = totalClasses > 0 ? Math.ceil((effectiveAttended / totalClasses) * 100) : 0;
 
-            const overallPercent = totalClasses > 0 ? Math.ceil((totalAttended / totalClasses) * 100) : 0;
-            document.getElementById('overall-percent').textContent  = overallPercent + '%';
-            document.getElementById('total-classes').textContent    = totalClasses;
-            document.getElementById('attended-classes').textContent = totalAttended;
-            document.getElementById('progress-text').textContent    = overallPercent + '%';
+            animateNumber(document.getElementById('overall-percent'), overallPercent, '%');
+            animateNumber(document.getElementById('total-classes'),    totalClasses,   '');
+            animateNumber(document.getElementById('attended-classes'), totalAttended,  '');
+            animateNumber(document.getElementById('dl-classes'),       totalDL,        '');
+
+            document.getElementById('progress-text').textContent = overallPercent + '%';
             document.getElementById('main-progress-bar').style.width = Math.min(overallPercent, 100) + '%';
 
-            const pb = document.getElementById('main-progress-bar');
-            const ob = document.getElementById('overall-percent').parentElement;
+            const pb  = document.getElementById('main-progress-bar');
+            const box = document.getElementById('overall-percent').closest('.stat-box');
             if (overallPercent >= targetAttendance) {
-                pb.style.background = '#00b894';
-                ob.style.background = 'linear-gradient(135deg,#00b894,#00cec9)';
+                pb.style.background  = 'linear-gradient(90deg, var(--success), #34D399)';
+                box.style.background = 'linear-gradient(135deg, #059669, #10B981)';
             } else if (overallPercent >= targetAttendance - 10) {
-                pb.style.background = '#fdcb6e';
-                ob.style.background = 'linear-gradient(135deg,#fdcb6e,#e17055)';
+                pb.style.background  = 'linear-gradient(90deg, var(--warning), #FCD34D)';
+                box.style.background = 'linear-gradient(135deg, #D97706, #F59E0B)';
             } else {
-                pb.style.background = '#d63031';
-                ob.style.background = 'linear-gradient(135deg,#d63031,#eb4d4b)';
+                pb.style.background  = 'linear-gradient(90deg, var(--danger), #F87171)';
+                box.style.background = 'linear-gradient(135deg, #DC2626, #EF4444)';
             }
             saveData();
         }
@@ -841,20 +1074,26 @@
                 return;
             }
             subjects.forEach(s => {
-                const percent = s.total > 0 ? Math.round((s.attended / s.total) * 100) : 0;
-                let color = '#d63031';
-                if      (percent >= targetAttendance)      color = '#00b894';
-                else if (percent >= targetAttendance - 10) color = '#fdcb6e';
+                const eff     = s.attended + s.dl;
+                const percent = s.total > 0 ? Math.round((eff / s.total) * 100) : 0;
+                let color = '#DC2626';
+                if      (percent >= targetAttendance)      color = '#059669';
+                else if (percent >= targetAttendance - 10) color = '#D97706';
 
                 const item = document.createElement('div');
-                item.style.marginBottom = '14px';
+                item.className = 'breakdown-item';
                 item.innerHTML = `
-                    <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:5px;">
-                        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:8px;">${s.name}</span>
-                        <span style="font-weight:600;color:${color};flex-shrink:0;">${percent}%</span>
+                    <div class="breakdown-header">
+                        <span class="breakdown-name" title="${escHtml(s.name)}">${escHtml(s.name)}</span>
+                        <div class="breakdown-meta">
+                            <span>${s.attended}A</span>
+                            ${s.dl > 0 ? `<span style="color:var(--dl-color);font-weight:700;">${s.dl}DL</span>` : ''}
+                            <span>${s.total}T</span>
+                        </div>
+                        <span class="breakdown-pct" style="color:${color};">${percent}%</span>
                     </div>
-                    <div class="progress-container" style="height:5px;">
-                        <div class="progress-bar" style="width:${percent}%;background:${color};"></div>
+                    <div class="progress-container" style="height:6px;">
+                        <div class="progress-bar" style="width:${Math.min(percent,100)}%; background:${color};"></div>
                     </div>`;
                 container.appendChild(item);
             });
@@ -876,49 +1115,53 @@
             if (btn) btn.classList.add('active');
         }
 
-        // ── Calculators ──
+        // ── Calculators — DL-aware ──
         function getTotals() {
-            let a = 0, t = 0;
-            subjects.forEach(s => { a += s.attended; t += s.total; });
-            return { attended: a, total: t };
+            let a = 0, dl = 0, t = 0;
+            subjects.forEach(s => { a += s.attended; dl += s.dl; t += s.total; });
+            return { attended: a, dl, total: t, effective: a + dl };
         }
 
         function calculateBunk() {
             const inputTarget = parseInt(document.getElementById('bunk-target').value) || targetAttendance;
-            const { attended, total } = getTotals();
+            const { effective, total } = getTotals();
             if (total === 0) return alert('Please add class data first.');
 
-            const cur = (attended / total) * 100;
+            const cur = (effective / total) * 100;
             const el  = document.getElementById('bunk-result');
 
             if (cur < inputTarget) {
-                const needed = Math.ceil(((inputTarget / 100) * total - attended) / (1 - inputTarget / 100));
-                el.innerHTML = `<h4><i class="fas fa-book-open" style="color:var(--primary)"></i> Need Attendance</h4>
+                const needed = Math.ceil(((inputTarget / 100) * total - effective) / (1 - inputTarget / 100));
+                el.innerHTML = `<h4><i class="fas fa-book-open" style="color:var(--primary)"></i> Need More Attendance</h4>
+                    <p>Effective Attendance (Attended + DL): <strong>${effective}</strong> / <strong>${total}</strong></p>
                     <p>Current: <strong>${Math.ceil(cur)}%</strong></p>
-                    <p>Attend <strong style="color:var(--danger);font-size:1.1rem;">${needed} classes</strong> to reach ${inputTarget}%.</p>`;
+                    <p>Attend <strong style="color:var(--danger);font-size:1.1rem;">${needed} more classes</strong> to reach ${inputTarget}%.</p>`;
             } else {
-                const maxMiss = Math.floor((attended - (inputTarget / 100) * total) / (1 - inputTarget / 100));
-                el.innerHTML = `<h4><i class="fas fa-check-circle" style="color:var(--success)"></i> You can Bunk!</h4>
+                const maxMiss = Math.floor((effective - (inputTarget / 100) * total) / (1 - inputTarget / 100));
+                el.innerHTML = `<h4><i class="fas fa-couch" style="color:var(--success)"></i> You Can Bunk!</h4>
+                    <p>Effective Attendance (Attended + DL): <strong>${effective}</strong> / <strong>${total}</strong></p>
                     <p>Current: <strong>${Math.ceil(cur)}%</strong></p>
-                    <p>Skip up to <strong style="color:var(--primary);font-size:1.1rem;">${maxMiss} classes</strong> & maintain ${inputTarget}%.</p>`;
+                    <p>Skip up to <strong style="color:var(--primary-light);font-size:1.1rem;">${maxMiss} classes</strong> & still maintain ${inputTarget}%.</p>`;
             }
             el.style.display = 'block';
         }
 
         function calculateRequirement() {
             const target = parseInt(document.getElementById('req-target').value) || targetAttendance;
-            const { attended, total } = getTotals();
+            const { effective, total } = getTotals();
             if (total === 0) return alert('Please add class data first.');
 
-            const cur    = (attended / total) * 100;
-            const needed = Math.ceil(((target / 100) * total - attended) / (1 - target / 100));
+            const cur    = (effective / total) * 100;
+            const needed = Math.ceil(((target / 100) * total - effective) / (1 - target / 100));
             const el     = document.getElementById('req-result');
 
             if (cur >= target) {
                 el.innerHTML = `<h4><i class="fas fa-trophy" style="color:var(--success)"></i> Target Reached!</h4>
+                    <p>Effective Attendance (Attended + DL): <strong>${effective}</strong> / <strong>${total}</strong></p>
                     <p>You've already achieved ${target}% attendance. 🎉</p>`;
             } else {
                 el.innerHTML = `<h4><i class="fas fa-book-open" style="color:var(--primary)"></i> Keep Going!</h4>
+                    <p>Effective Attendance (Attended + DL): <strong>${effective}</strong> / <strong>${total}</strong></p>
                     <p>Current: <strong>${Math.ceil(cur)}%</strong></p>
                     <p>Attend <strong style="color:var(--danger);font-size:1.1rem;">${needed} more classes</strong> to reach ${target}%.</p>`;
             }
@@ -928,29 +1171,32 @@
         function calculateDaySkip() {
             const perDay = parseInt(document.getElementById('skip-per-day').value) || 0;
             const days   = parseInt(document.getElementById('skip-days').value)    || 0;
-            const { attended, total } = getTotals();
+            const { attended, dl, total } = getTotals();
+            const effective = attended + dl;
             if (total === 0) return alert('Please add class data first.');
 
             const missed     = perDay * days;
             const newTotal   = total + missed;
-            const newPercent = (attended / newTotal) * 100;
-            const curPercent = (attended / total)    * 100;
+            const newPercent = (effective / newTotal) * 100;
+            const curPercent = (effective / total)    * 100;
             const safe       = newPercent >= targetAttendance;
             const el         = document.getElementById('day-skip-result');
 
             el.innerHTML = `
                 <h4><i class="fas fa-calendar-minus" style="color:var(--primary)"></i> Impact Analysis</h4>
-                <p>Before: <strong>${curPercent.toFixed(1)}%</strong> → After: <strong>${newPercent.toFixed(1)}%</strong></p>
-                <p>Classes missed: <strong>${missed}</strong></p>
-                <span class="status-badge ${safe ? 'status-good' : 'status-bad'}" style="display:inline-block;margin-top:6px;">
-                    ${safe ? '✅ Safe' : '⚠️ Risk of Shortage'}
+                <p>Effective Attendance (Attended + DL): <strong>${effective}</strong> / <strong>${total}</strong></p>
+                <p>Before: <strong>${curPercent.toFixed(1)}%</strong> → After skipping: <strong>${newPercent.toFixed(1)}%</strong></p>
+                <p>Classes to be missed: <strong>${missed}</strong></p>
+                <span class="status-badge ${safe ? 'status-safe' : 'status-crit'}" style="display:inline-flex;margin-top:8px;">
+                    ${safe ? '✓ Safe to skip' : '⚠ Risk of Shortage'}
                 </span>`;
             el.style.display = 'block';
         }
 
         // ── Persist ──
-        function saveData() { localStorage.setItem('lpuSubjects', JSON.stringify(subjects)); }
+        function saveData() {
+            try { localStorage.setItem('lpuSubjects_v2', JSON.stringify(subjects)); } catch(e) {}
+        }
     </script>
 </body>
 </html>
-
