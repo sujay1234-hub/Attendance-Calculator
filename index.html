@@ -1,1280 +1,764 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>LPU Pro Attendance Tracker</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #5B21B6;
-            --primary-light: #7C3AED;
-            --primary-glow: rgba(91,33,182,0.25);
-            --accent: #0EA5E9;
-            --accent2: #10B981;
-            --dl-color: #F59E0B;
-            --bg: #F8F7FF;
-            --surface: #FFFFFF;
-            --surface2: #F1EFF9;
-            --text: #1C1033;
-            --text-light: #6B5F85;
-            --text-muted: #A898C0;
-            --border: rgba(91,33,182,0.12);
-            --border-solid: #E5E0F3;
-            --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --shadow-sm: 0 2px 8px rgba(91,33,182,0.06);
-            --shadow: 0 8px 32px rgba(91,33,182,0.1);
-            --shadow-lg: 0 20px 60px rgba(91,33,182,0.15);
-            --radius: 20px;
-            --radius-sm: 12px;
-            --radius-xs: 8px;
-            --navbar-h: 68px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        [data-theme="dark"] {
-            --bg: #0D0A1A;
-            --surface: #160F2A;
-            --surface2: #1F1538;
-            --text: #F0EBFF;
-            --text-light: #A898C0;
-            --text-muted: #6B5F85;
-            --border: rgba(124,58,237,0.18);
-            --border-solid: #2A1F44;
-            --shadow: 0 8px 32px rgba(0,0,0,0.4);
-            --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
-        }
-        *{box-sizing:border-box;margin:0;padding:0}
-        html{scroll-behavior:smooth}
-        body{
-            font-family:'DM Sans',sans-serif;
-            background:var(--bg);
-            color:var(--text);
-            min-height:100vh;
-            line-height:1.6;
-            -webkit-text-size-adjust:100%;
-            transition:background .35s,color .35s;
-        }
-        body::before{
-            content:'';
-            position:fixed;
-            inset:0;
-            background:
-                radial-gradient(ellipse 60% 50% at 10% 10%, rgba(91,33,182,0.07) 0%, transparent 60%),
-                radial-gradient(ellipse 50% 40% at 90% 85%, rgba(14,165,233,0.05) 0%, transparent 60%);
-            pointer-events:none;
-            z-index:0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LPU Pro Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --p:#7C5CFC;--p2:#9B7DFF;--p3:#C4B5FD;--pglow:rgba(124,92,252,.28);
+  --acc:#00E5A0;--dl:#FFB347;--danger:#FF4D6D;--sky:#38C8FF;
+  --bg:#070511;--bg2:#0D0A1C;--card:#100D22;--card2:#16122E;
+  --border:rgba(124,92,252,.15);--border2:rgba(255,255,255,.05);
+  --text:#EDE8FF;--text2:#9589B8;--text3:#4A4170;
+  --r:20px;--r2:14px;--r3:9px;
+  --t:all .22s cubic-bezier(.4,0,.2,1);
+  --sc:0 4px 24px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.04) inset;
+}
+[data-theme="light"]{
+  --bg:#F7F5FF;--bg2:#EEEBFF;--card:#FFFFFF;--card2:#F3F0FF;
+  --border:rgba(124,92,252,.12);--border2:rgba(124,92,252,.06);
+  --text:#18103A;--text2:#6251A0;--text3:#B0A8D0;
+  --sc:0 4px 24px rgba(124,92,252,.08),0 1px 0 rgba(255,255,255,.9) inset;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;-webkit-text-size-adjust:100%;overscroll-behavior:none;transition:background .35s,color .35s;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 55% 35% at 15% 0%,rgba(124,92,252,.12) 0%,transparent 65%),
+  radial-gradient(ellipse 45% 30% at 88% 8%,rgba(56,200,255,.07) 0%,transparent 65%),
+  radial-gradient(ellipse 40% 25% at 70% 95%,rgba(0,229,160,.05) 0%,transparent 65%);}
 
-        /* ── NAVBAR ── */
-        .navbar{
-            background:var(--surface);
-            border-bottom:1px solid var(--border);
-            padding:0 clamp(1rem,4vw,2rem);
-            height:var(--navbar-h);
-            display:flex;justify-content:space-between;align-items:center;
-            position:sticky;top:0;z-index:300;
-            backdrop-filter:blur(20px);
-            -webkit-backdrop-filter:blur(20px);
-            box-shadow:var(--shadow-sm);
-        }
-        .logo{
-            display:flex;align-items:center;gap:12px;
-            font-size:clamp(.95rem,3vw,1.2rem);
-            font-weight:800;letter-spacing:-.03em;color:var(--text);
-        }
-        .logo-icon{
-            width:40px;height:40px;
-            background:linear-gradient(135deg,var(--primary),var(--primary-light));
-            border-radius:12px;
-            display:flex;align-items:center;justify-content:center;
-            color:#fff;font-size:1.05rem;
-            box-shadow:0 4px 14px var(--primary-glow);
-            flex-shrink:0;
-        }
-        .logo span{color:var(--primary);}
-        .nav-actions{display:flex;align-items:center;gap:10px;}
-        .nav-btn{
-            background:var(--surface2);
-            border:1.5px solid var(--border-solid);
-            color:var(--text-light);
-            width:40px;height:40px;
-            border-radius:50%;
-            cursor:pointer;font-size:.95rem;
-            transition:var(--transition);
-            display:flex;align-items:center;justify-content:center;
-            flex-shrink:0;
-        }
-        .nav-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary);transform:scale(1.08);}
-        #theme-btn:hover{transform:rotate(25deg) scale(1.08);}
+/* NAV */
+.nav{position:sticky;top:0;z-index:300;height:58px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;background:rgba(7,5,17,.9);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--border2);}
+[data-theme="light"] .nav{background:rgba(247,245,255,.9);}
+.nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--p),var(--p2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;flex-shrink:0;box-shadow:0 2px 12px var(--pglow);}
+.logo-text{font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:-.02em;}
+.logo-text em{font-style:normal;color:var(--p3);}
+.nav-pills{display:flex;align-items:center;gap:6px;}
+.np{height:32px;padding:0 10px;border-radius:8px;background:var(--card2);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:6px;transition:var(--t);flex-shrink:0;font-family:'Plus Jakarta Sans',sans-serif;width:32px;justify-content:center;}
+.np:active{transform:scale(.93);}
+.np:hover{background:var(--p);color:#fff;border-color:var(--p);}
 
-        /* ── HERO BANNER ── */
-        .hero{
-            background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 50%,#0EA5E9 100%);
-            padding:clamp(20px,4vw,32px) clamp(16px,4vw,32px);
-            position:relative;overflow:hidden;
-        }
-        .hero::before{
-            content:'';position:absolute;inset:0;
-            background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-        .hero-inner{max-width:1140px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;position:relative;}
-        .hero-text h1{font-size:clamp(1.2rem,4vw,1.8rem);font-weight:800;color:#fff;letter-spacing:-.03em;margin-bottom:4px;}
-        .hero-text p{font-size:clamp(.8rem,2.5vw,.95rem);color:rgba(255,255,255,.75);font-weight:500;}
-        .hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
-        .hero-badge{
-            background:rgba(255,255,255,.15);
-            border:1px solid rgba(255,255,255,.25);
-            color:#fff;
-            padding:5px 14px;border-radius:20px;
-            font-size:.75rem;font-weight:700;letter-spacing:.02em;
-            display:flex;align-items:center;gap:6px;
-            backdrop-filter:blur(4px);
-        }
-        .hero-stat{text-align:center;color:#fff;}
-        .hero-stat .big{font-family:'Space Mono',monospace;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:700;line-height:1;}
-        .hero-stat .lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;opacity:.75;margin-top:4px;}
+/* HERO */
+.hero{position:relative;overflow:hidden;padding:26px 18px 24px;background:linear-gradient(160deg,#1A0845 0%,#0F0629 40%,#061525 100%);}
+.hero-mesh{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 20% 50%,rgba(124,92,252,.3) 0%,transparent 60%),radial-gradient(ellipse 50% 70% at 85% 20%,rgba(56,200,255,.17) 0%,transparent 55%),radial-gradient(ellipse 40% 50% at 60% 90%,rgba(0,229,160,.1) 0%,transparent 55%);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(124,92,252,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(124,92,252,.06) 1px,transparent 1px);background-size:40px 40px;mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.5) 30%,rgba(0,0,0,.5) 70%,transparent);}
+.hero-inner{position:relative;z-index:1;}
+.hero-row{display:flex;justify-content:space-between;align-items:center;gap:14px;}
+.hero-eyebrow{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--p3);margin-bottom:7px;display:flex;align-items:center;gap:6px;}
+.hero-eyebrow::before{content:'';width:14px;height:1px;background:var(--p3);opacity:.7;}
+.hero-h1{font-family:'Outfit',sans-serif;font-size:1.55rem;font-weight:800;line-height:1.15;letter-spacing:-.04em;color:#fff;margin-bottom:5px;}
+.hero-sub{font-size:.76rem;color:rgba(255,255,255,.5);font-weight:400;}
+.ring-wrap{position:relative;width:86px;height:86px;flex-shrink:0;filter:drop-shadow(0 0 18px rgba(124,92,252,.45));}
+.ring-wrap svg{width:86px;height:86px;transform:rotate(-90deg);}
+.ring-wrap circle{fill:none;stroke-linecap:round;}
+.r-bg{stroke:rgba(255,255,255,.07);stroke-width:6;}
+.r-track{stroke:rgba(124,92,252,.2);stroke-width:6;}
+.r-fill{stroke:url(#rg);stroke-width:6;stroke-dasharray:239;stroke-dashoffset:239;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);}
+.ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-n{font-family:'JetBrains Mono',monospace;font-size:1.05rem;font-weight:700;color:#fff;line-height:1;}
+.ring-s{font-size:.46rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:2px;}
+.hero-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px;}
+.htag{padding:4px 10px;border-radius:20px;font-size:.63rem;font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);color:rgba(255,255,255,.7);backdrop-filter:blur(4px);}
 
-        /* ── CONTAINER ── */
-        .container{max-width:1140px;margin:0 auto;padding:clamp(16px,3vw,28px) clamp(12px,3vw,20px);position:relative;z-index:1;}
+/* STATS STRIP */
+.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border-bottom:1px solid var(--border2);position:relative;z-index:1;}
+.stat-cell{padding:15px 6px 13px;text-align:center;border-right:1px solid var(--border2);position:relative;overflow:hidden;}
+.stat-cell:last-child{border-right:none;}
+.stat-cell::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .3s;}
+.stat-cell.s1::after{background:linear-gradient(90deg,var(--p),var(--p2));}
+.stat-cell.s2::after{background:linear-gradient(90deg,#1a8fff,var(--sky));}
+.stat-cell.s3::after{background:linear-gradient(90deg,#00965e,var(--acc));}
+.stat-cell.s4::after{background:linear-gradient(90deg,#c97800,var(--dl));}
+.stat-cell:hover::after{opacity:1;}
+.sv{font-family:'JetBrains Mono',monospace;font-size:1.15rem;font-weight:700;line-height:1.2;}
+.sl{font-size:.54rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-top:3px;}
+.s1 .sv{color:var(--p3);}
+.s2 .sv{color:var(--sky);}
+.s3 .sv{color:var(--acc);}
+.s4 .sv{color:var(--dl);}
 
-        /* ── GRID ── */
-        .main-grid{display:grid;grid-template-columns:1fr;gap:clamp(14px,2.5vw,22px);}
-        @media(min-width:900px){.main-grid{grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);align-items:start;}}
+/* PROGRESS */
+.prog-wrap{padding:14px 18px 12px;background:var(--card);border-bottom:1px solid var(--border2);}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+.prog-lbl{font-size:.74rem;font-weight:600;color:var(--text2);}
+.prog-lbl b{color:var(--p3);font-weight:800;}
+.prog-num{font-family:'JetBrains Mono',monospace;font-size:.88rem;font-weight:700;color:var(--p3);}
+.prog-track{height:7px;border-radius:99px;background:var(--card2);overflow:hidden;}
+.prog-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--p),var(--p2),var(--p3));background-size:200%;animation:bs 3s ease infinite;transition:width .9s cubic-bezier(.4,0,.2,1);}
+@keyframes bs{0%{background-position:0%}50%{background-position:100%}100%{background-position:0%}}
+.prog-foot{display:flex;justify-content:space-between;align-items:center;margin-top:7px;}
+.prog-hint{font-size:.64rem;color:var(--text3);font-weight:500;display:flex;align-items:center;gap:5px;}
+.prog-hint i{color:var(--dl);font-size:.6rem;}
+#cnl{font-size:.67rem;font-weight:700;}
 
-        /* ── CARDS ── */
-        .card{
-            background:var(--surface);
-            border-radius:var(--radius);
-            border:1px solid var(--border);
-            box-shadow:var(--shadow);
-            transition:var(--transition);
-            overflow:hidden;
-        }
-        .card-body{padding:clamp(16px,4vw,26px);}
-        .card:hover{box-shadow:var(--shadow-lg);}
-        .card-header{
-            display:flex;justify-content:space-between;align-items:center;
-            padding:clamp(14px,3vw,20px) clamp(16px,4vw,26px);
-            border-bottom:1px solid var(--border);
-            background:var(--surface2);
-        }
-        .card-title{font-size:clamp(.9rem,2.5vw,1.05rem);font-weight:700;display:flex;align-items:center;gap:9px;letter-spacing:-.02em;}
-        .card-title .icon{
-            width:32px;height:32px;border-radius:9px;
-            background:linear-gradient(135deg,var(--primary),var(--primary-light));
-            display:flex;align-items:center;justify-content:center;
-            color:#fff;font-size:.8rem;
-            box-shadow:0 3px 10px var(--primary-glow);
-            flex-shrink:0;
-        }
-        .card-title .icon.green{background:linear-gradient(135deg,#059669,#10B981);}
-        .card-title .icon.blue{background:linear-gradient(135deg,#0284C7,#0EA5E9);}
-        .card-title .icon.amber{background:linear-gradient(135deg,#D97706,#F59E0B);}
+/* DIVIDER */
+.sdiv{height:6px;background:var(--bg2);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);}
 
-        /* ── STATS GRID ── */
-        .stats-grid{
-            display:grid;
-            grid-template-columns:repeat(2,1fr);
-            gap:clamp(8px,2vw,14px);
-            padding:clamp(14px,3vw,22px) clamp(16px,4vw,26px);
-        }
-        @media(min-width:480px){.stats-grid{grid-template-columns:repeat(4,1fr);}}
-        .stat-card{
-            border-radius:var(--radius-sm);
-            padding:clamp(12px,3vw,18px) clamp(10px,2vw,16px);
-            text-align:center;
-            position:relative;overflow:hidden;
-            cursor:default;
-            transition:var(--transition);
-            border:1.5px solid transparent;
-        }
-        .stat-card:hover{transform:translateY(-3px);filter:brightness(1.05);}
-        .stat-card.c1{background:linear-gradient(135deg,#5B21B6,#7C3AED);color:#fff;}
-        .stat-card.c2{background:linear-gradient(135deg,#0284C7,#0EA5E9);color:#fff;}
-        .stat-card.c3{background:linear-gradient(135deg,#059669,#10B981);color:#fff;}
-        .stat-card.c4{background:linear-gradient(135deg,#D97706,#F59E0B);color:#fff;}
-        .stat-card .si{position:absolute;right:10px;top:10px;opacity:.2;font-size:1.8rem;}
-        .stat-card .sv{font-family:'Space Mono',monospace;font-size:clamp(1.5rem,5vw,2.2rem);font-weight:700;line-height:1.1;margin:4px 0 3px;}
-        .stat-card .sl{font-size:clamp(.6rem,1.7vw,.72rem);text-transform:uppercase;letter-spacing:.07em;opacity:.88;font-weight:700;}
+/* SECTION HEADER */
+.sh{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;}
+.sh-l{display:flex;align-items:center;gap:8px;}
+.sh-icon{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--p),var(--p2));display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#fff;flex-shrink:0;box-shadow:0 2px 8px var(--pglow);}
+.sh-title{font-size:.8rem;font-weight:800;}
+.sh-r{display:flex;align-items:center;gap:8px;}
+.as-tag{font-size:.63rem;color:var(--acc);font-weight:700;display:flex;align-items:center;gap:4px;}
+.rst-btn{font-size:.7rem;font-weight:700;cursor:pointer;padding:5px 10px;border-radius:var(--r3);border:1px solid var(--border);background:var(--card2);color:var(--text2);display:flex;align-items:center;gap:4px;transition:var(--t);font-family:'Plus Jakarta Sans',sans-serif;}
+.rst-btn:active{transform:scale(.93);}
+.rst-btn:hover{border-color:var(--danger);color:var(--danger);}
 
-        /* ── SECTION LABEL ── */
-        .section-label{
-            font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;
-            font-weight:800;color:var(--text-muted);
-            display:flex;align-items:center;gap:8px;
-            padding:clamp(12px,2vw,16px) clamp(16px,4vw,26px) 0;
-        }
-        .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+/* SUBJECT CARDS */
+.slist{padding:0 14px;display:flex;flex-direction:column;gap:10px;}
+.sc{border-radius:var(--r);overflow:hidden;background:var(--card);border:1px solid var(--border);box-shadow:var(--sc);transition:var(--t);animation:cIn .3s cubic-bezier(.4,0,.2,1) both;}
+@keyframes cIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.sc:hover{border-color:rgba(124,92,252,.3);}
+.sc-head{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--card2);border-bottom:1px solid var(--border2);}
+.cbar{width:3px;height:28px;border-radius:3px;flex-shrink:0;}
+.sn-inp{flex:1;min-width:0;background:transparent;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.87rem;font-weight:700;color:var(--text);}
+.sn-inp:focus{outline:none;}
+.schip{padding:3px 9px;border-radius:20px;font-size:.6rem;font-weight:800;white-space:nowrap;flex-shrink:0;}
+.chip-safe{background:rgba(0,229,160,.1);color:var(--acc);border:1px solid rgba(0,229,160,.2);}
+.chip-warn{background:rgba(255,179,71,.1);color:var(--dl);border:1px solid rgba(255,179,71,.2);}
+.chip-crit{background:rgba(255,77,109,.1);color:var(--danger);border:1px solid rgba(255,77,109,.2);}
+.chip-na{background:var(--card2);color:var(--text3);border:1px solid var(--border);}
+.sc-fields{display:grid;grid-template-columns:1fr 1fr 1fr;}
+.sf{display:flex;flex-direction:column;align-items:center;padding:12px 6px 10px;border-right:1px solid var(--border2);gap:6px;}
+.sf:last-child{border-right:none;}
+.sf-lbl{font-size:.56rem;text-transform:uppercase;letter-spacing:.08em;font-weight:800;display:flex;align-items:center;gap:4px;}
+.sf-lbl.att{color:var(--acc);}
+.sf-lbl.dl{color:var(--dl);}
+.sf-lbl.tot{color:var(--sky);}
+.sf-row{display:flex;align-items:center;gap:5px;}
+.sb{width:24px;height:24px;border-radius:6px;flex-shrink:0;cursor:pointer;background:var(--card2);border:1px solid var(--border);color:var(--text2);font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:var(--t);user-select:none;font-family:'JetBrains Mono',monospace;}
+.sb:active{transform:scale(.82);background:var(--p);color:#fff;border-color:var(--p);}
+.sf-inp{width:38px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:1.25rem;font-weight:700;color:var(--text);background:transparent;border:none;-webkit-appearance:none;appearance:none;cursor:text;}
+.sf-inp:focus{outline:none;color:var(--p3);}
+.sf-inp::placeholder{color:var(--text3);font-size:.9rem;}
+.sf-inp::-webkit-inner-spin-button,.sf-inp::-webkit-outer-spin-button{-webkit-appearance:none;}
+.sf-inp[type=number]{-moz-appearance:textfield;}
+.sc-foot{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-top:1px solid var(--border2);}
+.sc-meta{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;color:var(--text3);}
+.del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:.7rem;font-weight:700;display:flex;align-items:center;gap:4px;padding:4px 7px;border-radius:6px;transition:var(--t);font-family:'Plus Jakarta Sans',sans-serif;}
+.del:active{color:var(--danger);background:rgba(255,77,109,.08);}
 
-        /* ── TABLE ── */
-        .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 clamp(16px,4vw,26px) clamp(14px,3vw,20px);}
-        .subject-table{width:100%;border-collapse:collapse;min-width:520px;}
-        .subject-table th{
-            text-align:left;
-            font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;
-            color:var(--text-muted);padding:10px 12px;
-            background:var(--surface2);
-            border-bottom:2px solid var(--border);
-            white-space:nowrap;
-        }
-        .subject-table th:first-child{border-radius:var(--radius-xs) 0 0 var(--radius-xs);}
-        .subject-table th:last-child{border-radius:0 var(--radius-xs) var(--radius-xs) 0;}
-        .subject-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:clamp(.8rem,2.2vw,.9rem);}
-        .sr{transition:background .2s;}
-        .sr:hover{background:rgba(91,33,182,.04);}
-        .sr:last-child td{border-bottom:none;}
-        .sr input{
-            background:transparent;border:none;
-            color:var(--text);font-family:inherit;
-            font-size:clamp(.8rem,2.2vw,.9rem);
-            width:100%;padding:4px 6px;
-            border-radius:var(--radius-xs);transition:.2s;
-        }
-        .sr input:focus{outline:none;background:rgba(91,33,182,.08);}
-        .sr input[type=number]{max-width:56px;text-align:center;font-family:'Space Mono',monospace;}
-        .sr input[type=number].dl-in:focus{background:rgba(245,158,11,.1);}
-        .subject-name-wrap{display:flex;align-items:center;gap:8px;}
-        .subject-color-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+/* EMPTY */
+.empty{text-align:center;padding:30px 16px;color:var(--text3);}
+.empty i{font-size:2rem;opacity:.2;display:block;margin-bottom:10px;}
+.empty p{font-size:.8rem;font-weight:500;}
 
-        /* ── STATUS BADGES ── */
-        .badge{padding:4px 10px;border-radius:20px;font-size:.68rem;font-weight:800;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;letter-spacing:.02em;}
-        .badge-safe{background:rgba(16,185,129,.12);color:#059669;border:1px solid rgba(16,185,129,.2);}
-        .badge-warn{background:rgba(245,158,11,.12);color:#B45309;border:1px solid rgba(245,158,11,.2);}
-        .badge-crit{background:rgba(239,68,68,.12);color:#DC2626;border:1px solid rgba(239,68,68,.2);}
-        .badge-na{background:var(--surface2);color:var(--text-muted);border:1px solid var(--border-solid);}
+/* ADD */
+.add-row{padding:12px 14px;display:flex;gap:8px;}
+.add-inp{flex:1;min-width:0;padding:10px 14px;border-radius:var(--r2);border:1.5px solid var(--border);background:var(--card2);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.82rem;font-weight:500;transition:.2s;}
+.add-inp:focus{outline:none;border-color:var(--p);background:var(--card);box-shadow:0 0 0 3px var(--pglow);}
+.add-inp::placeholder{color:var(--text3);}
+.add-btn{padding:10px 16px;border-radius:var(--r2);border:none;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;cursor:pointer;font-size:.8rem;font-weight:800;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 4px 16px var(--pglow);transition:var(--t);}
+.add-btn:active{transform:scale(.95);}
 
-        /* ── ADD SUBJECT ── */
-        .add-section{padding:0 clamp(16px,4vw,26px) clamp(16px,3vw,22px);}
-        .input-row{display:flex;gap:10px;flex-wrap:wrap;}
-        .styled-input{
-            flex:1;min-width:0;
-            padding:clamp(10px,2.5vw,12px) 14px;
-            border:1.5px solid var(--border-solid);
-            border-radius:var(--radius-sm);
-            background:var(--surface2);
-            color:var(--text);font-family:inherit;
-            font-size:clamp(.85rem,2.4vw,.93rem);font-weight:500;
-            transition:var(--transition);
-        }
-        .styled-input:focus{outline:none;border-color:var(--primary);background:var(--surface);box-shadow:0 0 0 3px var(--primary-glow);}
-        .styled-input::placeholder{color:var(--text-muted);}
-        .btn{
-            padding:clamp(10px,2.5vw,12px) clamp(14px,3vw,22px);
-            border-radius:var(--radius-sm);border:none;
-            cursor:pointer;font-family:inherit;
-            font-size:clamp(.82rem,2.3vw,.9rem);font-weight:700;
-            transition:var(--transition);display:flex;align-items:center;gap:7px;white-space:nowrap;
-        }
-        .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;box-shadow:0 4px 14px var(--primary-glow);}
-        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 22px var(--primary-glow);}
-        .btn-primary:active{transform:translateY(0);}
-        .btn-outline{background:transparent;border:1.5px solid var(--border-solid);color:var(--text-light);}
-        .btn-outline:hover{border-color:var(--danger);color:var(--danger);background:rgba(239,68,68,.06);}
-        .btn-ghost{background:transparent;border:none;color:var(--text-muted);padding:6px 8px;border-radius:var(--radius-xs);}
-        .btn-ghost:hover{color:var(--danger);background:rgba(239,68,68,.1);}
-        .btn-sm{padding:7px 13px;font-size:.8rem;}
+/* TOOLS */
+.tools-outer{padding:0 14px 14px;}
+.tools-box{border-radius:var(--r);overflow:hidden;border:1px solid var(--border);background:var(--card);box-shadow:var(--sc);}
+.tools-hd{padding:12px 16px;background:var(--card2);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:8px;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);}
+.tools-hd i{color:var(--p3);}
+.tabs-row{display:flex;gap:5px;overflow-x:auto;padding:10px 12px 0;scrollbar-width:none;}
+.tabs-row::-webkit-scrollbar{display:none;}
+.tbtn{flex-shrink:0;padding:6px 12px;border-radius:var(--r3);background:var(--card2);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-size:.7rem;font-weight:700;display:flex;align-items:center;gap:5px;white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif;transition:var(--t);}
+.tbtn.active{background:var(--p);color:#fff;border-color:var(--p);box-shadow:0 3px 10px var(--pglow);}
+.tbtn:not(.active):hover{border-color:var(--p3);color:var(--p3);}
+.tpane{display:none;padding:12px;}
+.tpane.active{display:block;animation:pIn .2s ease;}
+@keyframes pIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.tdesc{font-size:.73rem;color:var(--text2);margin-bottom:10px;font-weight:500;line-height:1.5;}
+.ti-row{display:flex;gap:7px;flex-wrap:wrap;}
+.ti{flex:1;min-width:120px;padding:9px 12px;border-radius:var(--r2);border:1.5px solid var(--border);background:var(--card2);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.81rem;font-weight:500;transition:.2s;}
+.ti:focus{outline:none;border-color:var(--p);background:var(--card);box-shadow:0 0 0 3px var(--pglow);}
+.ti::placeholder{color:var(--text3);}
+.ti::-webkit-inner-spin-button,.ti::-webkit-outer-spin-button{-webkit-appearance:none;}
+.ti[type=number]{-moz-appearance:textfield;}
+.tgo{padding:9px 16px;border-radius:var(--r2);border:none;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;cursor:pointer;font-size:.77rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap;display:flex;align-items:center;gap:5px;box-shadow:0 3px 10px var(--pglow);transition:var(--t);}
+.tgo:active{transform:scale(.95);}
+.tgo.w{width:100%;justify-content:center;margin-top:7px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:7px;}
+.tres{margin-top:10px;padding:12px 14px;border-radius:var(--r2);background:var(--card2);border:1px solid var(--border);border-left:3px solid var(--p);animation:pIn .2s ease;}
+.tres h4{color:var(--p3);font-size:.8rem;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.tres p{font-size:.74rem;color:var(--text2);margin-bottom:3px;font-weight:500;}
+.tres strong{font-family:'JetBrains Mono',monospace;color:var(--text);}
 
-        /* ── QUICK TOOLS TABS ── */
-        .tools-section{padding:0 clamp(16px,4vw,26px) clamp(14px,3vw,20px);}
-        .tools-divider{border-top:1px solid var(--border);margin-bottom:clamp(12px,2vw,18px);}
-        .tabs-row{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin-bottom:clamp(10px,2vw,16px);}
-        .tabs-row::-webkit-scrollbar{display:none;}
-        .tab-btn{
-            padding:8px clamp(12px,2.5vw,18px);
-            background:var(--surface2);border:1.5px solid var(--border-solid);
-            border-radius:var(--radius-xs);color:var(--text-light);
-            cursor:pointer;white-space:nowrap;font-weight:600;
-            font-family:inherit;font-size:clamp(.75rem,2.2vw,.84rem);
-            transition:var(--transition);display:flex;align-items:center;gap:6px;
-        }
-        .tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 4px 12px var(--primary-glow);}
-        .tab-btn:not(.active):hover{border-color:var(--primary);color:var(--primary);}
-        .tab-pane{display:none;}
-        .tab-pane.active{display:block;animation:fadeUp .25s ease;}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* SIDE PANELS */
+.side-wrap{padding:0 14px 14px;display:flex;flex-direction:column;gap:8px;}
+.panel{border-radius:var(--r);overflow:hidden;border:1px solid var(--border);background:var(--card);box-shadow:var(--sc);}
+.panel-hd{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer;background:var(--card2);border-bottom:1px solid transparent;transition:var(--t);}
+.panel.open .panel-hd{border-bottom-color:var(--border2);}
+.panel-hd-l{display:flex;align-items:center;gap:8px;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--text3);}
+.panel-hd-l i{color:var(--p3);}
+.pchev{color:var(--text3);font-size:.72rem;transition:transform .22s;}
+.panel.open .pchev{transform:rotate(180deg);}
+.panel-bd{display:none;padding:14px;}
+.panel.open .panel-bd{display:block;animation:pIn .2s ease;}
 
-        .calc-box{
-            background:var(--surface2);border-radius:var(--radius-sm);
-            padding:clamp(14px,3vw,20px);border:1px solid var(--border);
-        }
-        .calc-desc{font-size:clamp(.78rem,2.2vw,.86rem);color:var(--text-light);margin-bottom:14px;font-weight:500;}
-        .calc-result{
-            margin-top:14px;padding:clamp(12px,3vw,16px);
-            border-radius:var(--radius-sm);background:var(--surface);
-            border-left:4px solid var(--primary);animation:fadeUp .25s ease;
-        }
-        .calc-result h4{color:var(--primary);font-size:clamp(.85rem,2.3vw,.96rem);font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:7px;}
-        .calc-result p{font-size:clamp(.78rem,2.2vw,.86rem);margin-bottom:5px;color:var(--text);}
-        .calc-result strong{font-family:'Space Mono',monospace;}
-        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-        .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;}
+/* Slider */
+.tgt-row{display:flex;gap:10px;align-items:center;margin-top:6px;}
+input[type=range]{flex:1;min-width:0;cursor:pointer;-webkit-appearance:none;appearance:none;height:4px;border-radius:99px;background:linear-gradient(90deg,var(--p) var(--val,50%),var(--card2) var(--val,50%));}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--p);border:2px solid #fff;box-shadow:0 0 0 3px var(--pglow);cursor:pointer;}
+.tgt-num{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--p3);font-size:1.1rem;min-width:42px;text-align:right;}
+.tgt-note{font-size:.68rem;color:var(--text3);margin-top:7px;font-weight:500;}
 
-        /* ── PROGRESS BAR ── */
-        .prog-track{height:8px;background:var(--border-solid);border-radius:99px;overflow:hidden;}
-        .prog-bar{
-            height:100%;border-radius:99px;
-            transition:width .8s cubic-bezier(.4,0,.2,1),background .4s;
-            position:relative;background:linear-gradient(90deg,var(--primary),var(--primary-light));
-        }
-        .prog-bar::after{
-            content:'';position:absolute;inset:0;
-            background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);
-            animation:shimmer 2.2s infinite;
-        }
-        @keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(300%)}}
+/* Breakdown */
+.bdi{margin-bottom:12px;}.bdi:last-child{margin-bottom:0;}
+.bdi-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:5px;}
+.bdi-name{flex:1;font-size:.77rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bdi-meta{font-size:.61rem;color:var(--text3);font-weight:700;display:flex;gap:5px;flex-shrink:0;}
+.bdi-pct{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.77rem;flex-shrink:0;}
+.mtrack{height:4px;border-radius:99px;background:var(--card2);overflow:hidden;}
+.mbar{height:100%;border-radius:99px;transition:width .7s cubic-bezier(.4,0,.2,1);}
 
-        /* ── SIDE PANEL ── */
-        .side-section{padding:clamp(14px,3vw,20px) clamp(16px,4vw,24px);border-bottom:1px solid var(--border);}
-        .side-section:last-child{border-bottom:none;}
-        .side-title{font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-        .side-title i{color:var(--primary);}
+/* Alerts */
+.arow{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;border-radius:var(--r2);margin-bottom:7px;font-size:.74rem;font-weight:600;border:1px solid var(--border);}
+.arow:last-child{margin-bottom:0;}
+.arow.crit{background:rgba(255,77,109,.07);border-color:rgba(255,77,109,.18);}
+.arow.warn{background:rgba(255,179,71,.07);border-color:rgba(255,179,71,.18);}
+.arow i{margin-top:1px;flex-shrink:0;}
+.arow.crit i{color:var(--danger);}
+.arow.warn i{color:var(--dl);}
+.atxt{flex:1;color:var(--text2);}
+.atxt strong{color:var(--text);font-size:.72rem;display:block;margin-bottom:2px;}
 
-        /* Target slider */
-        .target-row{display:flex;gap:12px;align-items:center;margin-top:8px;}
-        input[type=range]{flex:1;accent-color:var(--primary);cursor:pointer;height:4px;border-radius:99px;min-width:0;}
-        .target-val{font-family:'Space Mono',monospace;font-weight:700;color:var(--primary);font-size:1.1rem;min-width:46px;text-align:right;}
+/* Tips */
+.tlist{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.tlist li{font-size:.72rem;color:var(--text2);font-weight:500;padding:8px 10px 8px 24px;position:relative;background:var(--card2);border-radius:var(--r3);border:1px solid var(--border2);line-height:1.5;}
+.tlist li::before{content:'✦';position:absolute;left:8px;top:9px;color:var(--p3);font-size:.58rem;}
 
-        /* Breakdown */
-        .breakdown-item{margin-bottom:13px;animation:fadeUp .3s ease;}
-        .breakdown-item:last-child{margin-bottom:0;}
-        .breakdown-header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:5px;}
-        .breakdown-name{flex:1;font-weight:600;font-size:.84rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-        .breakdown-meta{font-size:.7rem;color:var(--text-muted);display:flex;gap:6px;flex-shrink:0;}
-        .breakdown-pct{font-family:'Space Mono',monospace;font-weight:700;font-size:.84rem;flex-shrink:0;}
+/* Summary */
+.stbl{width:100%;border-collapse:collapse;font-size:.7rem;}
+.stbl th{text-align:left;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);padding:5px 7px;border-bottom:1px solid var(--border);}
+.stbl td{padding:7px;border-bottom:1px solid var(--border2);font-weight:500;color:var(--text2);}
+.stbl tr:last-child td{border-bottom:none;}
+.stbl td:first-child{color:var(--text);font-weight:700;max-width:95px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
-        /* Tips */
-        .tips-list{list-style:none;padding:0;}
-        .tips-list li{
-            font-size:clamp(.75rem,2.1vw,.83rem);color:var(--text-light);
-            margin-bottom:8px;padding:8px 10px 8px 30px;
-            position:relative;font-weight:500;
-            background:var(--surface2);border-radius:var(--radius-xs);
-            border:1px solid var(--border);
-        }
-        .tips-list li::before{content:"✦";position:absolute;left:10px;color:var(--primary);font-size:.7rem;}
+/* TOAST */
+.toast-wrap{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column;gap:7px;pointer-events:none;width:calc(100% - 28px);max-width:340px;}
+.toast{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--p);padding:11px 14px;border-radius:var(--r2);box-shadow:0 8px 32px rgba(0,0,0,.5);font-size:.8rem;font-weight:700;color:var(--text);animation:cIn .3s ease;pointer-events:auto;display:flex;align-items:center;gap:9px;backdrop-filter:blur(12px);}
+.toast.success{border-left-color:var(--acc);}
+.toast.warning{border-left-color:var(--dl);}
+.toast.error{border-left-color:var(--danger);}
 
-        /* ── STREAK / FORECAST ── */
-        .forecast-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px;}
-        .fc-cell{
-            aspect-ratio:1;border-radius:5px;
-            display:flex;align-items:center;justify-content:center;
-            font-size:.6rem;font-weight:700;
-            transition:var(--transition);cursor:default;
-        }
-        .fc-cell.present{background:rgba(16,185,129,.2);color:#059669;border:1px solid rgba(16,185,129,.3);}
-        .fc-cell.absent{background:rgba(239,68,68,.12);color:#DC2626;border:1px solid rgba(239,68,68,.2);}
-        .fc-cell.empty{background:var(--surface2);border:1px dashed var(--border);}
-        .forecast-legend{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;}
-        .fc-leg{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text-muted);font-weight:600;}
-        .fc-dot{width:10px;height:10px;border-radius:3px;}
+/* MODAL */
+.movl{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);display:flex;align-items:flex-end;justify-content:center;padding:12px;opacity:0;pointer-events:none;transition:.25s;}
+.movl.open{opacity:1;pointer-events:auto;}
+.modal{width:100%;max-width:440px;background:var(--card);border:1px solid var(--border);border-radius:var(--r) var(--r) 16px 16px;padding:22px;box-shadow:0 -8px 40px rgba(0,0,0,.5);transform:translateY(30px);transition:.3s cubic-bezier(.4,0,.2,1);}
+.movl.open .modal{transform:translateY(0);}
+.modal-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.modal-ttl{font-size:1rem;font-weight:800;}
+.modal-body{font-size:.83rem;color:var(--text2);line-height:1.7;}
+.modal-ft{margin-top:18px;display:flex;gap:8px;justify-content:flex-end;}
+.btn-cancel{padding:9px 16px;border-radius:var(--r2);background:var(--card2);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-size:.81rem;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;transition:var(--t);}
+.btn-del{padding:9px 16px;border-radius:var(--r2);border:none;background:var(--danger);color:#fff;cursor:pointer;font-size:.81rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 3px 12px rgba(255,77,109,.3);transition:var(--t);}
+.bclose{background:none;border:none;cursor:pointer;color:var(--text3);font-size:.9rem;padding:4px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:var(--t);}
 
-        /* ── EMPTY STATE ── */
-        .empty-state{
-            text-align:center;padding:28px 0;
-            color:var(--text-muted);font-size:.88rem;font-weight:500;
-        }
-        .empty-state i{font-size:2.2rem;opacity:.25;display:block;margin-bottom:10px;}
+/* FOOTER */
+.footer{text-align:center;padding:22px 20px;border-top:1px solid var(--border2);position:relative;z-index:1;}
+.footer-brand{font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:-.02em;margin-bottom:3px;}
+.footer-brand em{font-style:normal;color:var(--p3);}
+.footer-sub{font-size:.68rem;color:var(--text3);font-weight:500;}
+.footer-sub a{color:var(--p3);text-decoration:none;font-weight:700;}
 
-        /* ── TOAST ── */
-        .toast-wrap{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
-        .toast{
-            background:var(--surface);border:1px solid var(--border);
-            border-left:4px solid var(--primary);
-            padding:12px 18px;border-radius:var(--radius-sm);
-            box-shadow:var(--shadow-lg);
-            font-size:.84rem;font-weight:600;color:var(--text);
-            animation:slideIn .3s ease;pointer-events:auto;
-            display:flex;align-items:center;gap:10px;max-width:320px;
-        }
-        .toast.success{border-left-color:var(--success);}
-        .toast.warning{border-left-color:var(--warning);}
-        .toast.error{border-left-color:var(--danger);}
-        @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-        @keyframes slideOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(20px)}}
+/* ANIM */
+.cpop{animation:cp .22s cubic-bezier(.4,0,.2,1);}
+@keyframes cp{0%{transform:scale(1.18)}100%{transform:scale(1)}}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
 
-        /* ── TOOLTIP ── */
-        .tip-wrap{position:relative;display:inline-flex;align-items:center;}
-        .tip-wrap .tip{
-            visibility:hidden;opacity:0;position:absolute;
-            bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
-            background:var(--text);color:var(--surface);
-            padding:6px 11px;border-radius:var(--radius-xs);
-            font-size:.7rem;white-space:nowrap;transition:.2s;
-            pointer-events:none;z-index:99;box-shadow:var(--shadow);font-weight:600;
-        }
-        .tip-wrap .tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--text);}
-        .tip-wrap:hover .tip{visibility:visible;opacity:1;bottom:calc(100% + 12px);}
-
-        /* ── MODAL ── */
-        .modal-overlay{
-            position:fixed;inset:0;background:rgba(0,0,0,.5);
-            backdrop-filter:blur(6px);z-index:500;
-            display:flex;align-items:center;justify-content:center;
-            padding:20px;opacity:0;pointer-events:none;transition:.3s;
-        }
-        .modal-overlay.open{opacity:1;pointer-events:auto;}
-        .modal{
-            background:var(--surface);border:1px solid var(--border);
-            border-radius:var(--radius);padding:clamp(20px,4vw,32px);
-            max-width:520px;width:100%;
-            box-shadow:var(--shadow-lg);
-            transform:translateY(20px);transition:.3s;
-        }
-        .modal-overlay.open .modal{transform:translateY(0);}
-        .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
-        .modal-title{font-size:1.1rem;font-weight:800;letter-spacing:-.02em;}
-        .modal-body{font-size:.9rem;color:var(--text-light);line-height:1.7;}
-        .modal-footer{margin-top:22px;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;}
-
-        .mobile-fields, .mobile-bottom { display: none; }
-        /* ── MOBILE CARD TABLE ── */
-        @media(max-width:640px){
-            .table-wrap{overflow-x:visible;padding:0 clamp(12px,4vw,18px) clamp(12px,3vw,16px);}
-            .subject-table{min-width:0;}
-            .subject-table thead{display:none;}
-            .subject-table, .subject-table tbody{display:block;width:100%;}
-            /* Show mobile UI elements */
-            .mobile-fields { display: grid !important; }
-            .mobile-bottom { display: flex !important; }
-            /* Hide desktop-only cells on mobile */
-            .sr td.desktop-only{display:none !important;}
-            .sr{
-                display:block;
-                background:var(--surface);
-                border-radius:var(--radius-sm);
-                padding:0;margin-bottom:12px;
-                border:1px solid var(--border);
-                box-shadow:var(--shadow-sm);
-                overflow:hidden;
-            }
-            .sr td{border:none;padding:0;display:block;}
-            /* Subject name row */
-            .sr td:nth-child(1){
-                display:flex;align-items:center;justify-content:space-between;
-                background:var(--surface2);
-                padding:12px 14px;
-                border-bottom:1px solid var(--border);
-            }
-            .sr td:nth-child(1) input{
-                font-weight:700;font-size:1rem;
-                color:var(--text);flex:1;
-            }
-            /* Mobile fields row */
-            .mobile-fields{
-                display:grid;
-                grid-template-columns:1fr 1fr 1fr;
-                gap:0;
-            }
-            .mf{
-                display:flex;flex-direction:column;align-items:center;justify-content:center;
-                padding:14px 8px 12px;
-                border-right:1px solid var(--border);
-                background:var(--surface);
-                position:relative;
-            }
-            .mf:last-of-type{border-right:none;}
-            .mf-lbl{
-                font-size:.65rem;
-                font-weight:800;
-                text-transform:uppercase;
-                letter-spacing:.08em;
-                margin-bottom:8px;
-                display:flex;align-items:center;gap:5px;
-            }
-            .mf-lbl.lbl-attended{color:#059669;}
-            .mf-lbl.lbl-dl{color:#D97706;}
-            .mf-lbl.lbl-total{color:#0284C7;}
-            .mf input[type=number]{
-                width:100%;max-width:80px;
-                text-align:center;
-                font-family:'Space Mono',monospace;
-                font-size:1.3rem;
-                font-weight:700;
-                color:var(--text);
-                background:var(--surface2);
-                border:2px solid var(--border-solid);
-                border-radius:var(--radius-xs);
-                padding:8px 4px;
-                transition:.2s;
-            }
-            .mf input[type=number]:focus{
-                outline:none;
-                border-color:var(--primary);
-                background:var(--surface);
-                box-shadow:0 0 0 3px var(--primary-glow);
-            }
-            /* Status + delete row */
-            .mobile-bottom{
-                display:flex;align-items:center;justify-content:space-between;
-                padding:10px 14px;
-                border-top:1px solid var(--border);
-                background:var(--surface2);
-            }
-        }
-
-        /* ── FOOTER ── */
-        .footer{
-            text-align:center;padding:clamp(24px,4vw,36px) 20px;
-            border-top:1px solid var(--border);margin-top:clamp(20px,4vw,36px);
-            position:relative;z-index:1;
-        }
-        .footer-brand{font-size:1.1rem;font-weight:800;letter-spacing:-.03em;margin-bottom:4px;}
-        .footer-brand span{color:var(--primary);}
-        .footer-sub{font-size:.82rem;color:var(--text-muted);font-weight:500;}
-        .footer-sub a{color:var(--primary);text-decoration:none;font-weight:700;}
-
-        /* ── SCROLLBAR ── */
-        ::-webkit-scrollbar{width:6px;height:6px;}
-        ::-webkit-scrollbar-track{background:transparent;}
-        ::-webkit-scrollbar-thumb{background:var(--border-solid);border-radius:99px;}
-        ::-webkit-scrollbar-thumb:hover{background:var(--text-muted);}
-
-        /* ── SUBJECT COLOR PILLS ── */
-        .subject-pct-badge{
-            font-family:'Space Mono',monospace;
-            font-size:.75rem;font-weight:700;
-            padding:2px 8px;border-radius:20px;
-        }
-
-        /* ── OVERVIEW STREAK ── */
-        .streak-display{
-            display:flex;align-items:center;gap:10px;
-            background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(239,68,68,.08));
-            border:1px solid rgba(245,158,11,.25);
-            border-radius:var(--radius-sm);padding:12px 16px;
-            margin-bottom:12px;
-        }
-        .streak-num{font-family:'Space Mono',monospace;font-size:1.8rem;font-weight:700;color:var(--dl-color);line-height:1;}
-        .streak-info p{font-size:.78rem;color:var(--text-light);font-weight:500;}
-        .streak-info strong{font-size:.9rem;color:var(--text);display:block;}
-
-        /* ── EXPORT BTN ── */
-        .export-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;padding:0 clamp(16px,4vw,26px) 12px;}
-    </style>
+/* DESKTOP */
+@media(min-width:768px){
+  .main-wrap{display:grid;grid-template-columns:1fr 360px;align-items:start;max-width:1080px;margin:0 auto;}
+  .left-col{border-right:1px solid var(--border2);}
+  .right-col{position:sticky;top:58px;max-height:calc(100vh - 58px);overflow-y:auto;}
+  .panel-bd{display:block!important;}
+  .pchev{display:none!important;}
+  .panel-hd{cursor:default!important;}
+}
+</style>
 </head>
 <body>
-<!-- Toast Container -->
+
 <div class="toast-wrap" id="toast-wrap"></div>
 
-<!-- Confirm Modal -->
-<div class="modal-overlay" id="confirm-modal">
+<div class="movl" id="confirm-modal">
     <div class="modal">
-        <div class="modal-header">
-            <div class="modal-title" id="modal-title">⚠️ Confirm Action</div>
-            <button class="btn btn-ghost" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        <div class="modal-hd">
+            <div class="modal-ttl" id="modal-title">Confirm</div>
+            <button class="bclose" onclick="closeModal()"><i class="fas fa-times"></i></button>
         </div>
-        <div class="modal-body" id="modal-body">Are you sure?</div>
-        <div class="modal-footer">
-            <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-            <button class="btn btn-primary" id="modal-confirm-btn">Confirm</button>
+        <div class="modal-body" id="modal-body"></div>
+        <div class="modal-ft">
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-del" id="modal-confirm-btn">Confirm</button>
         </div>
     </div>
 </div>
 
-<!-- NAVBAR -->
-<nav class="navbar">
+<nav class="nav">
     <div class="logo">
-        <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
-        LPU <span>Pro</span> Tracker
+        <div class="logo-mark"><i class="fas fa-graduation-cap"></i></div>
+        <div class="logo-text">LPU <em>Pro</em> Tracker</div>
     </div>
-    <div class="nav-actions">
-        <div class="tip-wrap">
-            <button class="nav-btn" onclick="exportCSV()" aria-label="Export CSV">
-                <i class="fas fa-download"></i>
-            </button>
-            <span class="tip">Export CSV</span>
-        </div>
-        <div class="tip-wrap">
-            <button class="nav-btn" id="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
-                <i class="fas fa-moon" id="theme-icon"></i>
-            </button>
-            <span class="tip">Toggle theme</span>
-        </div>
+    <div class="nav-pills">
+        <button class="np" onclick="exportCSV()" title="Export CSV"><i class="fas fa-download"></i></button>
+        <button class="np" onclick="toggleTheme()" id="theme-btn" title="Toggle theme"><i class="fas fa-sun" id="theme-icon"></i></button>
     </div>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
+    <div class="hero-mesh"></div>
+    <div class="hero-grid"></div>
     <div class="hero-inner">
-        <div class="hero-text">
-            <h1><i class="fas fa-chart-line" style="margin-right:10px;opacity:.8;"></i>Attendance Dashboard</h1>
-            <p>Track, analyze and plan your LPU attendance — never fall short.</p>
-            <div class="hero-badges">
-                <div class="hero-badge"><i class="fas fa-shield-halved"></i> DL-Aware</div>
-                <div class="hero-badge"><i class="fas fa-bolt"></i> Instant Calc</div>
-                <div class="hero-badge"><i class="fas fa-cloud"></i> Auto-Saved</div>
-                <div class="hero-badge"><i class="fas fa-mobile-alt"></i> Mobile Ready</div>
+        <div class="hero-row">
+            <div>
+                <div class="hero-eyebrow">Attendance Dashboard</div>
+                <div class="hero-h1">Never Miss<br>Your Target</div>
+                <div class="hero-sub">Track · Analyze · Plan smarter</div>
+            </div>
+            <div class="ring-wrap">
+                <svg viewBox="0 0 86 86">
+                    <defs>
+                        <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#7C5CFC"/>
+                            <stop offset="100%" stop-color="#38C8FF"/>
+                        </linearGradient>
+                    </defs>
+                    <circle class="r-bg" cx="43" cy="43" r="38"/>
+                    <circle class="r-track" cx="43" cy="43" r="38"/>
+                    <circle class="r-fill" id="ring-fill" cx="43" cy="43" r="38"/>
+                </svg>
+                <div class="ring-c">
+                    <div class="ring-n" id="ring-pct">0%</div>
+                    <div class="ring-s">Overall</div>
+                </div>
             </div>
         </div>
-        <div class="hero-stat">
-            <div class="big" id="hero-pct">0%</div>
-            <div class="lbl">Overall Attendance</div>
+        <div class="hero-tags">
+            <div class="htag"><i class="fas fa-shield-halved"></i> DL-Aware</div>
+            <div class="htag"><i class="fas fa-bolt"></i> Instant Calc</div>
+            <div class="htag"><i class="fas fa-cloud"></i> Auto-Saved</div>
+            <div class="htag"><i class="fas fa-mobile-alt"></i> Mobile Ready</div>
         </div>
     </div>
 </div>
 
-<div class="container">
-    <div class="main-grid">
+<div class="main-wrap">
+<div class="left-col">
 
-        <!-- ══ MAIN COLUMN ══ -->
-        <div style="display:flex;flex-direction:column;gap:clamp(14px,2.5vw,22px);">
+<div class="stats-strip">
+    <div class="stat-cell s1"><div class="sv" id="stat-pct">0%</div><div class="sl">Overall</div></div>
+    <div class="stat-cell s2"><div class="sv" id="stat-total">0</div><div class="sl">Total</div></div>
+    <div class="stat-cell s3"><div class="sv" id="stat-attended">0</div><div class="sl">Attended</div></div>
+    <div class="stat-cell s4"><div class="sv" id="stat-dl">0</div><div class="sl">DL</div></div>
+</div>
 
-            <!-- Stats Card -->
-            <div class="card">
-                <div class="stats-grid">
-                    <div class="stat-card c1">
-                        <i class="fas fa-percent si"></i>
-                        <div class="sl">Overall</div>
-                        <div class="sv" id="stat-pct">0%</div>
-                    </div>
-                    <div class="stat-card c2">
-                        <i class="fas fa-calendar si"></i>
-                        <div class="sl">Total</div>
-                        <div class="sv" id="stat-total">0</div>
-                    </div>
-                    <div class="stat-card c3">
-                        <i class="fas fa-check si"></i>
-                        <div class="sl">Attended</div>
-                        <div class="sv" id="stat-attended">0</div>
-                    </div>
-                    <div class="stat-card c4">
-                        <i class="fas fa-shield-halved si"></i>
-                        <div class="sl">DL Classes</div>
-                        <div class="sv" id="stat-dl">0</div>
-                    </div>
-                </div>
-
-                <!-- Progress Bar -->
-                <div style="padding:0 clamp(16px,4vw,26px) clamp(14px,3vw,20px);">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                        <span style="font-size:.83rem;font-weight:700;color:var(--text-light);">Progress toward <span id="prog-target-label" style="color:var(--primary);">75%</span> target</span>
-                        <span id="prog-pct" style="font-family:'Space Mono',monospace;font-weight:800;color:var(--primary);font-size:1rem;">0%</span>
-                    </div>
-                    <div class="prog-track" style="height:10px;">
-                        <div id="main-prog" class="prog-bar" style="width:0%;"></div>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;margin-top:6px;">
-                        <span style="font-size:.72rem;color:var(--text-muted);">
-                            <i class="fas fa-shield-halved" style="color:var(--dl-color);margin-right:3px;"></i>DL classes counted as attended
-                        </span>
-                        <span id="classes-needed-label" style="font-size:.72rem;color:var(--text-muted);font-weight:600;"></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Subjects Card -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <div class="icon"><i class="fas fa-book"></i></div>
-                        Subjects
-                    </div>
-                    <div style="display:flex;gap:8px;align-items:center;">
-                        <span style="font-size:.72rem;color:var(--text-muted);font-weight:600;"><i class="fas fa-circle-check" style="color:var(--success);margin-right:4px;"></i>Auto-saved</span>
-                        <button class="btn btn-outline btn-sm" onclick="confirmReset()">
-                            <i class="fas fa-rotate-left"></i> Reset
-                        </button>
-                    </div>
-                </div>
-
-                <div class="table-wrap" style="padding-top:clamp(12px,2vw,18px);">
-                    <table class="subject-table">
-                        <thead>
-                            <tr>
-                                <th style="width:36%">Subject</th>
-                                <th style="width:13%">Attended</th>
-                                <th style="width:13%">
-                                    <div class="tip-wrap">
-                                        DL <i class="fas fa-circle-info" style="color:var(--dl-color);font-size:.75rem;margin-left:3px;"></i>
-                                        <span class="tip">Duty Leave counts as attended</span>
-                                    </div>
-                                </th>
-                                <th style="width:13%">Total</th>
-                                <th style="width:17%">Status</th>
-                                <th style="width:8%"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="subject-tbody"></tbody>
-                    </table>
-                </div>
-
-                <!-- Add Subject -->
-                <div class="add-section">
-                    <div class="input-row">
-                        <input type="text" id="new-subject" class="styled-input" placeholder="Enter subject name (e.g. CSE205 - DSA)" onkeydown="if(event.key==='Enter')addSubject()">
-                        <button class="btn btn-primary" onclick="addSubject()"><i class="fas fa-plus"></i> Add</button>
-                    </div>
-                </div>
-
-                <!-- Quick Tools -->
-                <div class="tools-section">
-                    <div class="tools-divider"></div>
-                    <div class="card-title" style="margin-bottom:12px;font-size:.9rem;">
-                        <div class="icon" style="width:26px;height:26px;font-size:.75rem;"><i class="fas fa-bolt"></i></div>
-                        Quick Tools
-                    </div>
-                    <div class="tabs-row">
-                        <button class="tab-btn active" onclick="switchTab('bunk',this)"><i class="fas fa-couch"></i> Bunk Estimator</button>
-                        <button class="tab-btn" onclick="switchTab('req',this)"><i class="fas fa-book-open"></i> Requirement</button>
-                        <button class="tab-btn" onclick="switchTab('dayskip',this)"><i class="fas fa-calendar-xmark"></i> Day Skip</button>
-                        <button class="tab-btn" onclick="switchTab('forecast',this)"><i class="fas fa-brain"></i> Forecast</button>
-                    </div>
-
-                    <!-- BUNK -->
-                    <div id="bunk" class="tab-pane active">
-                        <div class="calc-box">
-                            <p class="calc-desc">How many classes can you skip while maintaining your attendance target? (DL included)</p>
-                            <div class="input-row">
-                                <input type="number" id="bunk-target" class="styled-input" placeholder="Target % (default: your target)" style="max-width:220px;">
-                                <button class="btn btn-primary" onclick="calcBunk()"><i class="fas fa-calculator"></i> Calculate</button>
-                            </div>
-                            <div id="bunk-result" class="calc-result" style="display:none;"></div>
-                        </div>
-                    </div>
-
-                    <!-- REQUIREMENT -->
-                    <div id="req" class="tab-pane">
-                        <div class="calc-box">
-                            <p class="calc-desc">How many more classes do you need to attend? (DL counted as attended)</p>
-                            <div class="input-row">
-                                <input type="number" id="req-target" class="styled-input" placeholder="Target % (default: your target)" style="max-width:220px;">
-                                <button class="btn btn-primary" onclick="calcReq()"><i class="fas fa-calculator"></i> Calculate</button>
-                            </div>
-                            <div id="req-result" class="calc-result" style="display:none;"></div>
-                        </div>
-                    </div>
-
-                    <!-- DAY SKIP -->
-                    <div id="dayskip" class="tab-pane">
-                        <div class="calc-box">
-                            <p class="calc-desc">Calculate the impact on your attendance if you skip upcoming days.</p>
-                            <div class="grid-2">
-                                <input type="number" id="skip-per-day" class="styled-input" placeholder="Classes per day">
-                                <input type="number" id="skip-days" class="styled-input" placeholder="Days to skip">
-                            </div>
-                            <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="calcDaySkip()"><i class="fas fa-chart-bar"></i> Calculate Impact</button>
-                            <div id="dayskip-result" class="calc-result" style="display:none;"></div>
-                        </div>
-                    </div>
-
-                    <!-- FORECAST -->
-                    <div id="forecast" class="tab-pane">
-                        <div class="calc-box">
-                            <p class="calc-desc">Simulate future attendance by entering upcoming classes and expected presence.</p>
-                            <div class="grid-3">
-                                <input type="number" id="fc-upcoming" class="styled-input" placeholder="Upcoming classes">
-                                <input type="number" id="fc-attend" class="styled-input" placeholder="You'll attend">
-                                <input type="number" id="fc-target" class="styled-input" placeholder="Target %">
-                            </div>
-                            <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="calcForecast()"><i class="fas fa-telescope"></i> Forecast</button>
-                            <div id="forecast-result" class="calc-result" style="display:none;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ══ SIDE COLUMN ══ -->
-        <div class="card">
-
-            <!-- Overall Target -->
-            <div class="side-section">
-                <div class="side-title"><i class="fas fa-bullseye"></i>Attendance Target</div>
-                <div class="target-row">
-                    <input type="range" id="target-slider" min="50" max="100" value="75" oninput="updateTarget()">
-                    <span class="target-val" id="target-display">75%</span>
-                </div>
-                <p style="font-size:.74rem;color:var(--text-muted);margin-top:8px;font-weight:500;">
-                    <i class="fas fa-info-circle" style="color:var(--primary);margin-right:4px;"></i>LPU minimum requirement is 75%.
-                </p>
-            </div>
-
-            <!-- Streak -->
-            <div class="side-section">
-                <div class="side-title"><i class="fas fa-fire"></i>Subject Alerts</div>
-                <div id="alerts-container">
-                    <div class="empty-state" style="padding:16px 0;"><i class="fas fa-bell"></i>No alerts — add subjects first</div>
-                </div>
-            </div>
-
-            <!-- Subject Breakdown -->
-            <div class="side-section">
-                <div class="side-title"><i class="fas fa-chart-bar"></i>Subject Breakdown</div>
-                <div id="subject-breakdown">
-                    <div class="empty-state"><i class="fas fa-layer-group"></i>Add subjects to see breakdown</div>
-                </div>
-            </div>
-
-            <!-- Summary Table -->
-            <div class="side-section">
-                <div class="side-title"><i class="fas fa-table"></i>Quick Summary</div>
-                <div id="summary-table">
-                    <div class="empty-state" style="padding:16px 0;"><i class="fas fa-table"></i>No data yet</div>
-                </div>
-            </div>
-
-            <!-- Tips -->
-            <div class="side-section">
-                <div class="side-title"><i class="fas fa-lightbulb"></i>Pro Tips</div>
-                <ul class="tips-list">
-                    <li>Maintain 80%+ for a safety buffer against unexpected absences.</li>
-                    <li>Lab attendance is crucial — labs count separately, never miss them.</li>
-                    <li>Apply for DL before the class date, not after.</li>
-                    <li>Don't miss the very first class — professors notice.</li>
-                    <li>Use the Forecast tool to plan ahead before bunking.</li>
-                </ul>
-            </div>
-        </div>
-
+<div class="prog-wrap">
+    <div class="prog-top">
+        <div class="prog-lbl">Progress toward <b id="ptl">75%</b> target</div>
+        <div class="prog-num" id="prog-pct">0%</div>
     </div>
+    <div class="prog-track"><div class="prog-bar" id="main-prog" style="width:0%"></div></div>
+    <div class="prog-foot">
+        <div class="prog-hint"><i class="fas fa-shield-halved"></i> DL counted as attended</div>
+        <span id="cnl"></span>
+    </div>
+</div>
+
+<div class="sdiv"></div>
+
+<div class="sh">
+    <div class="sh-l">
+        <div class="sh-icon"><i class="fas fa-book"></i></div>
+        <div class="sh-title">Subjects</div>
+    </div>
+    <div class="sh-r">
+        <span class="as-tag"><i class="fas fa-circle-check"></i> Auto-saved</span>
+        <button class="rst-btn" onclick="confirmReset()"><i class="fas fa-rotate-left"></i> Reset</button>
+    </div>
+</div>
+
+<div class="slist" id="subjects-list"></div>
+
+<div class="add-row">
+    <input type="text" id="new-subject" class="add-inp" placeholder="Add subject (e.g. CSE205 - DSA)" onkeydown="if(event.key==='Enter')addSubject()">
+    <button class="add-btn" onclick="addSubject()"><i class="fas fa-plus"></i> Add</button>
+</div>
+
+<div class="sdiv"></div>
+
+<div class="tools-outer">
+    <div class="tools-box">
+        <div class="tools-hd"><i class="fas fa-bolt"></i> Quick Tools</div>
+        <div class="tabs-row">
+            <button class="tbtn active" onclick="switchTab('bunk',this)"><i class="fas fa-couch"></i> Bunk</button>
+            <button class="tbtn" onclick="switchTab('req',this)"><i class="fas fa-book-open"></i> Requirement</button>
+            <button class="tbtn" onclick="switchTab('dayskip',this)"><i class="fas fa-calendar-xmark"></i> Day Skip</button>
+            <button class="tbtn" onclick="switchTab('forecast',this)"><i class="fas fa-brain"></i> Forecast</button>
+        </div>
+        <div id="bunk" class="tpane active">
+            <p class="tdesc">How many classes can you skip and still maintain your target?</p>
+            <div class="ti-row">
+                <input type="number" id="bunk-target" class="ti" placeholder="Target % (default)" inputmode="numeric">
+                <button class="tgo" onclick="calcBunk()"><i class="fas fa-calculator"></i> Calc</button>
+            </div>
+            <div id="bunk-result" class="tres" style="display:none;"></div>
+        </div>
+        <div id="req" class="tpane">
+            <p class="tdesc">How many more classes must you attend to reach your target?</p>
+            <div class="ti-row">
+                <input type="number" id="req-target" class="ti" placeholder="Target % (default)" inputmode="numeric">
+                <button class="tgo" onclick="calcReq()"><i class="fas fa-calculator"></i> Calc</button>
+            </div>
+            <div id="req-result" class="tres" style="display:none;"></div>
+        </div>
+        <div id="dayskip" class="tpane">
+            <p class="tdesc">Calculate attendance impact if you skip upcoming days.</p>
+            <div class="g2">
+                <input type="number" id="skip-per-day" class="ti" placeholder="Classes/day" inputmode="numeric">
+                <input type="number" id="skip-days" class="ti" placeholder="Days to skip" inputmode="numeric">
+            </div>
+            <button class="tgo w" onclick="calcDaySkip()"><i class="fas fa-chart-bar"></i> Calculate Impact</button>
+            <div id="dayskip-result" class="tres" style="display:none;"></div>
+        </div>
+        <div id="forecast" class="tpane">
+            <p class="tdesc">Simulate future attendance based on upcoming classes.</p>
+            <div class="g3">
+                <input type="number" id="fc-upcoming" class="ti" placeholder="Upcoming" inputmode="numeric">
+                <input type="number" id="fc-attend" class="ti" placeholder="Attending" inputmode="numeric">
+                <input type="number" id="fc-target" class="ti" placeholder="Target %" inputmode="numeric">
+            </div>
+            <button class="tgo w" onclick="calcForecast()"><i class="fas fa-telescope"></i> Forecast</button>
+            <div id="forecast-result" class="tres" style="display:none;"></div>
+        </div>
+    </div>
+</div>
+
+</div><!-- /left -->
+
+<div class="right-col">
+<div class="side-wrap">
+
+    <div class="panel open" id="pan-target">
+        <div class="panel-hd" onclick="togglePanel('pan-target')">
+            <div class="panel-hd-l"><i class="fas fa-bullseye"></i> Attendance Target</div>
+            <i class="fas fa-chevron-down pchev"></i>
+        </div>
+        <div class="panel-bd">
+            <div class="tgt-row">
+                <input type="range" id="target-slider" min="50" max="100" value="75" oninput="updateTarget()">
+                <span class="tgt-num" id="target-display">75%</span>
+            </div>
+            <div class="tgt-note"><i class="fas fa-info-circle" style="color:var(--p3);margin-right:4px;"></i>LPU minimum requirement is 75%.</div>
+        </div>
+    </div>
+
+    <div class="panel open" id="pan-alerts">
+        <div class="panel-hd" onclick="togglePanel('pan-alerts')">
+            <div class="panel-hd-l"><i class="fas fa-fire"></i> Subject Alerts</div>
+            <i class="fas fa-chevron-down pchev"></i>
+        </div>
+        <div class="panel-bd" id="alerts-container">
+            <div class="empty"><i class="fas fa-bell"></i><p>No alerts yet</p></div>
+        </div>
+    </div>
+
+    <div class="panel open" id="pan-breakdown">
+        <div class="panel-hd" onclick="togglePanel('pan-breakdown')">
+            <div class="panel-hd-l"><i class="fas fa-chart-bar"></i> Subject Breakdown</div>
+            <i class="fas fa-chevron-down pchev"></i>
+        </div>
+        <div class="panel-bd" id="subject-breakdown">
+            <div class="empty"><i class="fas fa-layer-group"></i><p>Add subjects to see breakdown</p></div>
+        </div>
+    </div>
+
+    <div class="panel" id="pan-summary">
+        <div class="panel-hd" onclick="togglePanel('pan-summary')">
+            <div class="panel-hd-l"><i class="fas fa-table"></i> Quick Summary</div>
+            <i class="fas fa-chevron-down pchev"></i>
+        </div>
+        <div class="panel-bd" id="summary-table">
+            <div class="empty"><i class="fas fa-table"></i><p>No data yet</p></div>
+        </div>
+    </div>
+
+    <div class="panel" id="pan-tips">
+        <div class="panel-hd" onclick="togglePanel('pan-tips')">
+            <div class="panel-hd-l"><i class="fas fa-lightbulb"></i> Pro Tips</div>
+            <i class="fas fa-chevron-down pchev"></i>
+        </div>
+        <div class="panel-bd">
+            <ul class="tlist">
+                <li>Maintain 80%+ for a safety buffer against unexpected absences.</li>
+                <li>Lab sessions count separately — never skip them.</li>
+                <li>Apply for DL before class, not after.</li>
+                <li>Don't miss the first class — professors notice.</li>
+                <li>Use the Forecast tool to plan before bunking.</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+</div>
 </div>
 
 <div class="footer">
-    <div class="footer-brand">LPU <span>Pro</span> Attendance Tracker</div>
+    <div class="footer-brand">LPU <em>Pro</em> Tracker</div>
     <div class="footer-sub">Built by <a href="#">Sujay Banarjee</a> · B.Tech CSE · All data stored locally</div>
 </div>
 
 <script>
-// ═══════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════
-let subjects = [];
-let targetAttendance = 75;
-const COLORS = ['#7C3AED','#0EA5E9','#10B981','#F59E0B','#EF4444','#EC4899','#06B6D4','#8B5CF6','#F97316','#14B8A6'];
+let subjects=[];let targetAttendance=75;
+const COLORS=['#7C5CFC','#38C8FF','#00E5A0','#FFB347','#FF4D6D','#F472B6','#06B6D4','#A78BFA','#F97316','#14B8A6'];
 
-// ═══════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════
-function init() {
-    try {
-        const saved = localStorage.getItem('lpuSubjects_v3');
-        subjects = saved ? JSON.parse(saved) : [
-            { id: 1, name: 'CSE205 - DSA',  attended: 0, dl: 0, total: 0 },
-            { id: 2, name: 'CSE201 - OOPS', attended: 0, dl: 0, total: 0 },
-            { id: 3, name: 'MATH203 - M3',  attended: 0, dl: 0, total: 0 }
-        ];
-        targetAttendance = parseInt(localStorage.getItem('lpuTarget') || '75');
-        document.getElementById('target-slider').value = targetAttendance;
-        document.getElementById('target-display').textContent = targetAttendance + '%';
-    } catch(e) { subjects = []; }
-
-    const dark = localStorage.getItem('lpuTheme') === 'dark';
-    if (dark) { document.documentElement.setAttribute('data-theme','dark'); document.getElementById('theme-icon').className = 'fas fa-sun'; }
-
-    render();
+function init(){
+  try{
+    const s=localStorage.getItem('lpuSubjects_v3');
+    subjects=s?JSON.parse(s):[
+      {id:1,name:'CSE205 - DSA',attended:0,dl:0,total:0},
+      {id:2,name:'CSE201 - OOPS',attended:0,dl:0,total:0},
+      {id:3,name:'MATH203 - M3',attended:0,dl:0,total:0}
+    ];
+    targetAttendance=parseInt(localStorage.getItem('lpuTarget')||'75');
+    const sl=document.getElementById('target-slider');
+    sl.value=targetAttendance;sliderBg(sl);
+    document.getElementById('target-display').textContent=targetAttendance+'%';
+  }catch(e){subjects=[];}
+  const th=localStorage.getItem('lpuTheme')||'dark';
+  document.documentElement.setAttribute('data-theme',th);
+  document.getElementById('theme-icon').className=th==='light'?'fas fa-moon':'fas fa-sun';
+  render();
 }
 
-// ═══════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════
-function render() {
-    renderTable();
-    updateStats();
-    renderBreakdown();
-    renderAlerts();
-    renderSummary();
-}
+function render(){renderSubjects();updateStats();renderBreakdown();renderAlerts();renderSummary();}
 
-function renderTable() {
-    const tbody = document.getElementById('subject-tbody');
-    if (subjects.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><i class="fas fa-book-open"></i>No subjects yet — add one below</div></td></tr>`;
-        return;
-    }
-    tbody.innerHTML = subjects.map((s, i) => {
-        const eff = s.attended + s.dl;
-        const pct = s.total > 0 ? Math.round((eff / s.total) * 100) : null;
-        const color = pct === null ? '' : pct >= targetAttendance ? '#059669' : pct >= targetAttendance - 10 ? '#D97706' : '#DC2626';
-        const badgeClass = pct === null ? 'badge-na' : pct >= targetAttendance ? 'badge-safe' : pct >= targetAttendance - 10 ? 'badge-warn' : 'badge-crit';
-        const badgeText = pct === null ? '—' : pct >= targetAttendance ? `✓ ${pct}%` : pct >= targetAttendance - 10 ? `⚠ ${pct}%` : `✗ ${pct}%`;
-        const dot = COLORS[i % COLORS.length];
-
-        return `<tr class="sr" id="row-${s.id}">
-            <td>
-                <div class="subject-name-wrap">
-                    <div class="subject-color-dot" style="background:${dot};"></div>
-                    <input type="text" value="${escHtml(s.name)}" onchange="updateName(${s.id},this.value)" title="${escHtml(s.name)}">
-                </div>
-                <!-- Mobile-only: 3 big labeled input boxes -->
-                <div class="mobile-fields">
-                    <div class="mf">
-                        <span class="mf-lbl lbl-attended"><i class="fas fa-check"></i> Attended</span>
-                        <input type="number" min="0" value="${s.attended}" onchange="updateField(${s.id},'attended',+this.value)" inputmode="numeric">
-                    </div>
-                    <div class="mf">
-                        <span class="mf-lbl lbl-dl"><i class="fas fa-shield-halved"></i> DL</span>
-                        <input type="number" min="0" value="${s.dl}" class="dl-in" onchange="updateField(${s.id},'dl',+this.value)" inputmode="numeric">
-                    </div>
-                    <div class="mf">
-                        <span class="mf-lbl lbl-total"><i class="fas fa-calendar"></i> Total</span>
-                        <input type="number" min="0" value="${s.total}" onchange="updateField(${s.id},'total',+this.value)" inputmode="numeric">
-                    </div>
-                </div>
-                <div class="mobile-bottom">
-                    <span class="badge ${badgeClass}">${badgeText}</span>
-                    <button class="btn btn-ghost" onclick="removeSubject(${s.id})" title="Remove" style="color:var(--danger);"><i class="fas fa-trash-alt"></i> Remove</button>
-                </div>
-            </td>
-            <td class="desktop-only"><input type="number" min="0" value="${s.attended}" onchange="updateField(${s.id},'attended',+this.value)" inputmode="numeric"></td>
-            <td class="desktop-only"><input type="number" min="0" value="${s.dl}" class="dl-in" onchange="updateField(${s.id},'dl',+this.value)" inputmode="numeric"></td>
-            <td class="desktop-only"><input type="number" min="0" value="${s.total}" onchange="updateField(${s.id},'total',+this.value)" inputmode="numeric"></td>
-            <td class="desktop-only"><span class="badge ${badgeClass}">${badgeText}</span></td>
-            <td class="desktop-only"><button class="btn btn-ghost" onclick="removeSubject(${s.id})" title="Remove"><i class="fas fa-trash-alt"></i></button></td>
-        </tr>`;
-    }).join('');
-}
-
-function updateStats() {
-    let ta = 0, tdl = 0, tt = 0;
-    subjects.forEach(s => { ta += s.attended; tdl += s.dl; tt += s.total; });
-    const eff = ta + tdl;
-    const pct = tt > 0 ? Math.ceil((eff / tt) * 100) : 0;
-
-    animNum(document.getElementById('stat-pct'), pct, '%');
-    animNum(document.getElementById('stat-total'), tt, '');
-    animNum(document.getElementById('stat-attended'), ta, '');
-    animNum(document.getElementById('stat-dl'), tdl, '');
-    document.getElementById('hero-pct').textContent = pct + '%';
-    document.getElementById('prog-pct').textContent = pct + '%';
-    document.getElementById('prog-target-label').textContent = targetAttendance + '%';
-
-    const bar = document.getElementById('main-prog');
-    bar.style.width = Math.min(pct, 100) + '%';
-    if (pct >= targetAttendance) {
-        bar.style.background = 'linear-gradient(90deg,#059669,#34D399)';
-    } else if (pct >= targetAttendance - 10) {
-        bar.style.background = 'linear-gradient(90deg,#D97706,#FCD34D)';
-    } else {
-        bar.style.background = 'linear-gradient(90deg,#DC2626,#F87171)';
-    }
-
-    // Classes needed label
-    const lbl = document.getElementById('classes-needed-label');
-    if (tt > 0 && pct < targetAttendance) {
-        const needed = Math.ceil(((targetAttendance/100)*tt - eff) / (1 - targetAttendance/100));
-        lbl.textContent = `Attend ${needed} more to reach target`;
-        lbl.style.color = 'var(--danger)';
-    } else if (tt > 0) {
-        const canSkip = Math.floor((eff - (targetAttendance/100)*tt) / (1 - targetAttendance/100));
-        lbl.textContent = `Can skip ${Math.max(0,canSkip)} more classes`;
-        lbl.style.color = 'var(--success)';
-    } else {
-        lbl.textContent = '';
-    }
-    save();
-}
-
-function renderBreakdown() {
-    const el = document.getElementById('subject-breakdown');
-    if (!subjects.length) { el.innerHTML = '<div class="empty-state"><i class="fas fa-layer-group"></i>Add subjects to see breakdown</div>'; return; }
-    el.innerHTML = subjects.map((s, i) => {
-        const eff = s.attended + s.dl;
-        const pct = s.total > 0 ? Math.round((eff / s.total) * 100) : 0;
-        const color = s.total === 0 ? 'var(--text-muted)' : pct >= targetAttendance ? '#059669' : pct >= targetAttendance - 10 ? '#D97706' : '#DC2626';
-        const dot = COLORS[i % COLORS.length];
-        return `<div class="breakdown-item">
-            <div class="breakdown-header">
-                <span class="breakdown-name" title="${escHtml(s.name)}"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dot};margin-right:6px;"></span>${escHtml(s.name)}</span>
-                <div class="breakdown-meta">
-                    <span>${s.attended}A</span>
-                    ${s.dl > 0 ? `<span style="color:var(--dl-color);font-weight:700;">${s.dl}DL</span>` : ''}
-                    <span>${s.total}T</span>
-                </div>
-                <span class="breakdown-pct" style="color:${color};">${s.total > 0 ? pct+'%' : '—'}</span>
-            </div>
-            <div class="prog-track" style="height:5px;">
-                <div class="prog-bar" style="width:${Math.min(s.total > 0 ? pct : 0, 100)}%;background:${color};"></div>
-            </div>
-        </div>`;
-    }).join('');
-}
-
-function renderAlerts() {
-    const el = document.getElementById('alerts-container');
-    const alerts = [];
-    subjects.forEach(s => {
-        if (s.total === 0) return;
-        const eff = s.attended + s.dl;
-        const pct = Math.round((eff / s.total) * 100);
-        if (pct < targetAttendance) {
-            const needed = Math.ceil(((targetAttendance/100)*s.total - eff) / (1 - targetAttendance/100));
-            alerts.push(`<div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:var(--radius-xs);padding:10px 12px;margin-bottom:8px;font-size:.8rem;">
-                <div style="font-weight:700;color:#DC2626;margin-bottom:3px;"><i class="fas fa-exclamation-triangle" style="margin-right:5px;"></i>${escHtml(s.name)}</div>
-                <div style="color:var(--text-light);">At <strong>${pct}%</strong> — attend <strong style="color:#DC2626;">${needed} more</strong> to recover.</div>
-            </div>`);
-        } else if (pct < targetAttendance + 5) {
-            alerts.push(`<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--radius-xs);padding:10px 12px;margin-bottom:8px;font-size:.8rem;">
-                <div style="font-weight:700;color:#D97706;margin-bottom:3px;"><i class="fas fa-exclamation-circle" style="margin-right:5px;"></i>${escHtml(s.name)}</div>
-                <div style="color:var(--text-light);">At <strong>${pct}%</strong> — barely above target. Be careful!</div>
-            </div>`);
-        }
-    });
-    el.innerHTML = alerts.length ? alerts.join('') : '<div style="font-size:.83rem;color:var(--success);font-weight:600;padding:10px 0;"><i class="fas fa-circle-check" style="margin-right:6px;"></i>All subjects are on track 🎉</div>';
-}
-
-function renderSummary() {
-    const el = document.getElementById('summary-table');
-    if (!subjects.length) { el.innerHTML = '<div class="empty-state" style="padding:14px 0;"><i class="fas fa-table"></i>No data yet</div>'; return; }
-    const rows = subjects.map(s => {
-        const eff = s.attended + s.dl;
-        const pct = s.total > 0 ? Math.round((eff/s.total)*100) : 0;
-        const safe = s.total > 0 && pct >= targetAttendance;
-        const canSkip = s.total > 0 && safe ? Math.floor((eff - (targetAttendance/100)*s.total)/(1-targetAttendance/100)) : 0;
-        const needMore = s.total > 0 && !safe ? Math.ceil(((targetAttendance/100)*s.total - eff)/(1-targetAttendance/100)) : 0;
-        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;">
-            <span style="font-weight:600;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(s.name)}">${escHtml(s.name)}</span>
-            <span style="color:${safe ? '#059669' : '#DC2626'};font-weight:700;font-family:'Space Mono',monospace;flex-shrink:0;margin-left:8px;">${s.total > 0 ? pct+'%' : '—'}</span>
-            <span style="color:var(--text-muted);font-size:.7rem;flex-shrink:0;margin-left:8px;">${s.total > 0 ? (safe ? '↑'+canSkip+' skip' : '↓'+needMore+' need') : ''}</span>
-        </div>`;
-    }).join('');
-    el.innerHTML = rows + `<div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--text-muted);padding-top:8px;font-weight:600;">
-        <span>↑ skip = classes you can bunk</span><span>↓ need = classes required</span>
+function renderSubjects(){
+  const el=document.getElementById('subjects-list');
+  if(!subjects.length){el.innerHTML='<div class="empty" style="padding:28px 0"><i class="fas fa-book-open"></i><p>No subjects yet — add one below</p></div>';return;}
+  el.innerHTML=subjects.map((s,i)=>{
+    const eff=s.attended+s.dl,pct=s.total>0?Math.round((eff/s.total)*100):null;
+    const cc=pct===null?'chip-na':pct>=targetAttendance?'chip-safe':pct>=targetAttendance-10?'chip-warn':'chip-crit';
+    const ct=pct===null?'—':pct>=targetAttendance?`✓ ${pct}%`:pct>=targetAttendance-10?`⚠ ${pct}%`:`✗ ${pct}%`;
+    const c=COLORS[i%COLORS.length];
+    return `<div class="sc" id="card-${s.id}">
+      <div class="sc-head">
+        <div class="cbar" style="background:${c};box-shadow:0 0 8px ${c}55;"></div>
+        <input class="sn-inp" type="text" value="${escHtml(s.name)}" onchange="updateName(${s.id},this.value)">
+        <span class="schip ${cc}">${ct}</span>
+      </div>
+      <div class="sc-fields">
+        <div class="sf">
+          <div class="sf-lbl att"><i class="fas fa-check"></i> Attended</div>
+          <div class="sf-row">
+            <button class="sb" onclick="stepField(${s.id},'attended',-1)">−</button>
+            <input type="number" class="sf-inp" value="${s.attended||''}" placeholder="0"
+              onfocus="if(this.value==='0'||this.value==='')this.value=''"
+              onblur="if(this.value===''||+this.value<0){updateField(${s.id},'attended',0);this.value='';}"
+              onchange="updateField(${s.id},'attended',Math.max(0,+this.value||0))" inputmode="numeric">
+            <button class="sb" onclick="stepField(${s.id},'attended',1)">+</button>
+          </div>
+        </div>
+        <div class="sf">
+          <div class="sf-lbl dl"><i class="fas fa-shield-halved"></i> DL</div>
+          <div class="sf-row">
+            <button class="sb" onclick="stepField(${s.id},'dl',-1)">−</button>
+            <input type="number" class="sf-inp" value="${s.dl||''}" placeholder="0"
+              onfocus="if(this.value==='0'||this.value==='')this.value=''"
+              onblur="if(this.value===''||+this.value<0){updateField(${s.id},'dl',0);this.value='';}"
+              onchange="updateField(${s.id},'dl',Math.max(0,+this.value||0))" inputmode="numeric">
+            <button class="sb" onclick="stepField(${s.id},'dl',1)">+</button>
+          </div>
+        </div>
+        <div class="sf">
+          <div class="sf-lbl tot"><i class="fas fa-calendar"></i> Total</div>
+          <div class="sf-row">
+            <button class="sb" onclick="stepField(${s.id},'total',-1)">−</button>
+            <input type="number" class="sf-inp" value="${s.total||''}" placeholder="0"
+              onfocus="if(this.value==='0'||this.value==='')this.value=''"
+              onblur="if(this.value===''||+this.value<0){updateField(${s.id},'total',0);this.value='';}"
+              onchange="updateField(${s.id},'total',Math.max(0,+this.value||0))" inputmode="numeric">
+            <button class="sb" onclick="stepField(${s.id},'total',1)">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="sc-foot">
+        <span class="sc-meta">${s.attended}A · ${s.dl}DL · ${s.total}T</span>
+        <button class="del" onclick="removeSubject(${s.id})"><i class="fas fa-trash-alt"></i> Remove</button>
+      </div>
     </div>`;
+  }).join('');
 }
 
-// ═══════════════════════════════════════
-// SUBJECT CRUD
-// ═══════════════════════════════════════
-function addSubject() {
-    const input = document.getElementById('new-subject');
-    const name = input.value.trim();
-    if (!name) { toast('Please enter a subject name.', 'warning'); return; }
-    if (subjects.find(s => s.name.toLowerCase() === name.toLowerCase())) { toast('Subject already exists!', 'warning'); return; }
-    const id = Date.now();
-    subjects.push({ id, name, attended: 0, dl: 0, total: 0 });
-    input.value = '';
-    render();
-    toast(`"${name}" added!`, 'success');
+function updateStats(){
+  let ta=0,tdl=0,tt=0;
+  subjects.forEach(s=>{ta+=s.attended;tdl+=s.dl;tt+=s.total;});
+  const eff=ta+tdl,pct=tt>0?Math.ceil((eff/tt)*100):0;
+  animNum('stat-pct',pct,'%');animNum('stat-total',tt,'');animNum('stat-attended',ta,'');animNum('stat-dl',tdl,'');
+  document.getElementById('ring-pct').textContent=pct+'%';
+  const C=2*Math.PI*38,off=C-(Math.min(pct,100)/100)*C;
+  const rf=document.getElementById('ring-fill');rf.style.strokeDasharray=C;rf.style.strokeDashoffset=off;
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('ptl').textContent=targetAttendance+'%';
+  const bar=document.getElementById('main-prog');bar.style.width=Math.min(pct,100)+'%';
+  if(pct>=targetAttendance)bar.style.background='linear-gradient(90deg,#00965e,#00E5A0)';
+  else if(pct>=targetAttendance-10)bar.style.background='linear-gradient(90deg,#c97800,#FFB347)';
+  else bar.style.background='linear-gradient(90deg,#c0183a,#FF4D6D)';
+  const lbl=document.getElementById('cnl');
+  if(tt>0&&pct<targetAttendance){const n=Math.ceil(((targetAttendance/100)*tt-eff)/(1-targetAttendance/100));lbl.textContent=`Attend ${n} more`;lbl.style.color='var(--danger)';lbl.style.fontWeight='700';}
+  else if(tt>0){const sk=Math.floor((eff-(targetAttendance/100)*tt)/(1-targetAttendance/100));lbl.textContent=`Can skip ${Math.max(0,sk)}`;lbl.style.color='var(--acc)';lbl.style.fontWeight='700';}
+  else lbl.textContent='';
+  save();
 }
 
-function removeSubject(id) {
-    subjects = subjects.filter(s => s.id !== id);
-    render();
-    toast('Subject removed.', '');
+function renderBreakdown(){
+  const el=document.getElementById('subject-breakdown');
+  if(!subjects.length){el.innerHTML='<div class="empty"><i class="fas fa-layer-group"></i><p>Add subjects to see breakdown</p></div>';return;}
+  el.innerHTML=subjects.map((s,i)=>{
+    const eff=s.attended+s.dl,pct=s.total>0?Math.round((eff/s.total)*100):0;
+    const col=s.total===0?'var(--text3)':pct>=targetAttendance?'var(--acc)':pct>=targetAttendance-10?'var(--dl)':'var(--danger)';
+    const c=COLORS[i%COLORS.length];
+    return `<div class="bdi">
+      <div class="bdi-top">
+        <div class="bdi-name"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${c};margin-right:5px;vertical-align:middle;"></span>${escHtml(s.name)}</div>
+        <div class="bdi-meta"><span>${s.attended}A</span>${s.dl>0?`<span style="color:var(--dl)">${s.dl}DL</span>`:''}<span>${s.total}T</span></div>
+        <div class="bdi-pct" style="color:${col}">${s.total>0?pct+'%':'—'}</div>
+      </div>
+      <div class="mtrack"><div class="mbar" style="width:${Math.min(s.total>0?pct:0,100)}%;background:${col};"></div></div>
+    </div>`;
+  }).join('');
 }
 
-function updateName(id, val) {
-    const s = subjects.find(s => s.id === id);
-    if (s) { s.name = val.trim() || s.name; save(); renderBreakdown(); renderAlerts(); renderSummary(); }
-}
-
-function updateField(id, field, val) {
-    const s = subjects.find(s => s.id === id);
-    if (!s) return;
-    val = Math.max(0, isNaN(val) ? 0 : val);
-    if (field === 'attended' && val > s.total && s.total > 0) { toast('Attended cannot exceed total.', 'warning'); val = s.total; }
-    if (field === 'dl' && (s.attended + val) > s.total && s.total > 0) { toast('Attended + DL cannot exceed total.', 'warning'); return; }
-    s[field] = val;
-    render();
-}
-
-function confirmReset() {
-    showModal('⚠️ Reset All Data', 'This will clear all subjects and attendance data. This cannot be undone.', () => {
-        subjects = [];
-        localStorage.removeItem('lpuSubjects_v3');
-        render();
-        toast('All data has been reset.', 'warning');
-    });
-}
-
-// ═══════════════════════════════════════
-// CALCULATIONS
-// ═══════════════════════════════════════
-function getTotals() {
-    let a=0,dl=0,t=0;
-    subjects.forEach(s => { a+=s.attended; dl+=s.dl; t+=s.total; });
-    return { attended:a, dl, total:t, eff:a+dl };
-}
-
-function calcBunk() {
-    const tgt = parseInt(document.getElementById('bunk-target').value) || targetAttendance;
-    const { eff, total } = getTotals();
-    if (total === 0) { toast('Add class data first!', 'warning'); return; }
-    const cur = (eff/total)*100;
-    const el = document.getElementById('bunk-result');
-    if (cur < tgt) {
-        const needed = Math.ceil(((tgt/100)*total - eff)/(1 - tgt/100));
-        el.innerHTML = `<h4><i class="fas fa-book-open"></i> Need More Attendance</h4>
-            <p>Effective: <strong>${eff}/${total}</strong> &nbsp;|&nbsp; Current: <strong>${Math.ceil(cur)}%</strong></p>
-            <p>You need to attend <strong style="color:var(--danger);font-size:1.05rem;">${needed} more classes</strong> to reach <strong>${tgt}%</strong>.</p>`;
-    } else {
-        const maxMiss = Math.floor((eff - (tgt/100)*total)/(1 - tgt/100));
-        el.innerHTML = `<h4><i class="fas fa-couch" style="color:var(--success);"></i> You Can Bunk!</h4>
-            <p>Effective: <strong>${eff}/${total}</strong> &nbsp;|&nbsp; Current: <strong>${Math.ceil(cur)}%</strong></p>
-            <p>You can skip up to <strong style="color:var(--primary-light);font-size:1.05rem;">${maxMiss} classes</strong> and still maintain <strong>${tgt}%</strong>.</p>`;
+function renderAlerts(){
+  const el=document.getElementById('alerts-container');
+  const rows=[];
+  subjects.forEach(s=>{
+    if(!s.total)return;
+    const eff=s.attended+s.dl,pct=Math.round((eff/s.total)*100);
+    if(pct<targetAttendance){
+      const n=Math.ceil(((targetAttendance/100)*s.total-eff)/(1-targetAttendance/100));
+      const t=pct<targetAttendance-15?'crit':'warn';
+      rows.push(`<div class="arow ${t}"><i class="fas fa-${t==='crit'?'circle-exclamation':'triangle-exclamation'}"></i><div class="atxt"><strong>${escHtml(s.name)}</strong>Attend ${n} more · currently ${pct}%</div></div>`);
     }
-    el.style.display = 'block';
+  });
+  el.innerHTML=rows.length?rows.join(''):'<div class="empty"><i class="fas fa-check-circle" style="color:var(--acc)"></i><p>All subjects on track!</p></div>';
 }
 
-function calcReq() {
-    const tgt = parseInt(document.getElementById('req-target').value) || targetAttendance;
-    const { eff, total } = getTotals();
-    if (total === 0) { toast('Add class data first!', 'warning'); return; }
-    const cur = (eff/total)*100;
-    const el = document.getElementById('req-result');
-    if (cur >= tgt) {
-        el.innerHTML = `<h4><i class="fas fa-trophy" style="color:var(--success);"></i> Target Already Reached!</h4>
-            <p>Effective: <strong>${eff}/${total}</strong></p>
-            <p>You have achieved <strong>${tgt}%</strong> attendance. 🎉 Keep it up!</p>`;
-    } else {
-        const needed = Math.ceil(((tgt/100)*total - eff)/(1 - tgt/100));
-        el.innerHTML = `<h4><i class="fas fa-book-open"></i> Keep Going!</h4>
-            <p>Effective: <strong>${eff}/${total}</strong> &nbsp;|&nbsp; Current: <strong>${Math.ceil(cur)}%</strong></p>
-            <p>Attend <strong style="color:var(--danger);font-size:1.05rem;">${needed} more classes</strong> to reach <strong>${tgt}%</strong>.</p>`;
-    }
-    el.style.display = 'block';
+function renderSummary(){
+  const el=document.getElementById('summary-table');
+  if(!subjects.length){el.innerHTML='<div class="empty"><i class="fas fa-table"></i><p>No data yet</p></div>';return;}
+  el.innerHTML=`<table class="stbl"><thead><tr><th>Subject</th><th>Eff</th><th>Tot</th><th>%</th></tr></thead><tbody>${
+    subjects.map(s=>{const eff=s.attended+s.dl,pct=s.total>0?Math.round((eff/s.total)*100):null,col=pct===null?'var(--text3)':pct>=targetAttendance?'var(--acc)':pct>=targetAttendance-10?'var(--dl)':'var(--danger)';
+    return `<tr><td>${escHtml(s.name)}</td><td>${eff}</td><td>${s.total}</td><td style="font-family:'JetBrains Mono',monospace;font-weight:700;color:${col}">${pct!==null?pct+'%':'—'}</td></tr>`;}).join('')
+  }</tbody></table>`;
 }
 
-function calcDaySkip() {
-    const ppd = parseInt(document.getElementById('skip-per-day').value) || 0;
-    const days = parseInt(document.getElementById('skip-days').value) || 0;
-    const { eff, total } = getTotals();
-    if (total === 0) { toast('Add class data first!', 'warning'); return; }
-    const missed = ppd * days;
-    const newTotal = total + missed;
-    const newPct = (eff/newTotal)*100;
-    const curPct = (eff/total)*100;
-    const safe = newPct >= targetAttendance;
-    const el = document.getElementById('dayskip-result');
-    el.innerHTML = `<h4><i class="fas fa-calendar-minus"></i> Impact Analysis</h4>
-        <p>Before: <strong>${curPct.toFixed(1)}%</strong> → After skipping: <strong style="color:${safe ? 'var(--success)' : 'var(--danger)'};">${newPct.toFixed(1)}%</strong></p>
-        <p>Classes to be missed: <strong>${missed}</strong> (${ppd}/day × ${days} days)</p>
-        <div style="margin-top:10px;"><span class="badge ${safe ? 'badge-safe' : 'badge-crit'}">${safe ? '✓ Safe to skip' : '⚠ Attendance at risk!'}</span></div>`;
-    el.style.display = 'block';
+function addSubject(){
+  const inp=document.getElementById('new-subject');const name=inp.value.trim();
+  if(!name){toast('Enter a subject name!','warning');return;}
+  const id=Date.now();subjects.push({id,name,attended:0,dl:0,total:0});inp.value='';render();toast(`Added "${name}"`, 'success');
+  setTimeout(()=>{const e=document.getElementById('card-'+id);if(e)e.scrollIntoView({behavior:'smooth',block:'center'});},120);
+}
+function removeSubject(id){
+  const s=subjects.find(x=>x.id===id);
+  showModal('Remove Subject',`Remove "${s?.name}"? This cannot be undone.`,()=>{subjects=subjects.filter(x=>x.id!==id);render();toast('Subject removed','warning');});
+}
+function updateName(id,val){const s=subjects.find(x=>x.id===id);if(s){s.name=val.trim()||s.name;save();renderBreakdown();renderAlerts();renderSummary();}}
+function updateField(id,field,val){const s=subjects.find(x=>x.id===id);if(s){s[field]=Math.max(0,isNaN(val)?0:val);render();}}
+function stepField(id,field,delta){const s=subjects.find(x=>x.id===id);if(!s)return;s[field]=Math.max(0,(s[field]||0)+delta);render();}
+function confirmReset(){
+  if(!subjects.length){toast('Nothing to reset!','warning');return;}
+  showModal('Reset All Data','This will clear all subjects. Are you sure?',()=>{subjects=[];localStorage.removeItem('lpuSubjects_v3');render();toast('Data reset','warning');});
 }
 
-function calcForecast() {
-    const upcoming = parseInt(document.getElementById('fc-upcoming').value) || 0;
-    const willAttend = parseInt(document.getElementById('fc-attend').value) || 0;
-    const tgt = parseInt(document.getElementById('fc-target').value) || targetAttendance;
-    const { eff, total } = getTotals();
-    if (total === 0 && upcoming === 0) { toast('Add class data first!', 'warning'); return; }
-    const newTotal = total + upcoming;
-    const newEff = eff + willAttend;
-    const newPct = newTotal > 0 ? (newEff/newTotal)*100 : 0;
-    const safe = newPct >= tgt;
-    const el = document.getElementById('forecast-result');
-    el.innerHTML = `<h4><i class="fas fa-telescope"></i> Attendance Forecast</h4>
-        <p>After ${upcoming} upcoming classes (attending ${willAttend}):</p>
-        <p>Projected: <strong style="color:${safe?'var(--success)':'var(--danger)'};font-size:1.05rem;">${newPct.toFixed(1)}%</strong> (${newEff}/${newTotal})</p>
-        <p style="margin-top:8px;"><span class="badge ${safe ? 'badge-safe' : 'badge-crit'}">${safe ? `✓ Will meet ${tgt}% target` : `✗ Will fall below ${tgt}% target`}</span></p>`;
-    el.style.display = 'block';
+function getTotals(){let eff=0,total=0;subjects.forEach(s=>{eff+=s.attended+s.dl;total+=s.total;});return{eff,total};}
+function calcBunk(){
+  const tgt=parseInt(document.getElementById('bunk-target').value)||targetAttendance;
+  const{eff,total}=getTotals();if(!total){toast('Add class data first!','warning');return;}
+  const m=Math.floor((eff-(tgt/100)*total)/(1-tgt/100));
+  const el=document.getElementById('bunk-result');
+  el.innerHTML=m<=0?`<h4><i class="fas fa-triangle-exclamation" style="color:var(--danger)"></i> Can't Bunk!</h4><p>Current: <strong>${Math.ceil((eff/total)*100)}%</strong> — at or below target.</p>`:
+    `<h4><i class="fas fa-couch" style="color:var(--acc)"></i> Bunk Budget</h4><p>Skip up to <strong style="color:var(--p3)">${m} classes</strong> and still maintain <strong>${tgt}%</strong>.</p>`;
+  el.style.display='block';
+}
+function calcReq(){
+  const tgt=parseInt(document.getElementById('req-target').value)||targetAttendance;
+  const{eff,total}=getTotals();if(!total){toast('Add class data first!','warning');return;}
+  const cur=(eff/total)*100;const el=document.getElementById('req-result');
+  el.innerHTML=cur>=tgt?`<h4><i class="fas fa-trophy" style="color:var(--acc)"></i> Target Reached!</h4><p>You've achieved <strong>${tgt}%</strong>. 🎉</p>`:
+    `<h4><i class="fas fa-book-open"></i> Keep Going!</h4><p>Current: <strong>${Math.ceil(cur)}%</strong> → Attend <strong style="color:var(--danger)">${Math.ceil(((tgt/100)*total-eff)/(1-tgt/100))} more</strong> to reach <strong>${tgt}%</strong>.</p>`;
+  el.style.display='block';
+}
+function calcDaySkip(){
+  const ppd=parseInt(document.getElementById('skip-per-day').value)||0,days=parseInt(document.getElementById('skip-days').value)||0;
+  const{eff,total}=getTotals();if(!total){toast('Add class data first!','warning');return;}
+  const missed=ppd*days,nt=total+missed,np=(eff/nt)*100,cp=(eff/total)*100,safe=np>=targetAttendance;
+  const el=document.getElementById('dayskip-result');
+  el.innerHTML=`<h4><i class="fas fa-calendar-minus"></i> Impact Analysis</h4><p>Before: <strong>${cp.toFixed(1)}%</strong> → After: <strong style="color:${safe?'var(--acc)':'var(--danger)'}">${np.toFixed(1)}%</strong></p><p>Classes missed: <strong>${missed}</strong></p><p style="margin-top:8px"><span class="schip ${safe?'chip-safe':'chip-crit'}">${safe?'✓ Safe to skip':'⚠ At risk!'}</span></p>`;
+  el.style.display='block';
+}
+function calcForecast(){
+  const up=parseInt(document.getElementById('fc-upcoming').value)||0,at=parseInt(document.getElementById('fc-attend').value)||0;
+  const tgt=parseInt(document.getElementById('fc-target').value)||targetAttendance;
+  const{eff,total}=getTotals();const nt=total+up,ne=eff+at,np=nt>0?(ne/nt)*100:0,safe=np>=tgt;
+  const el=document.getElementById('forecast-result');
+  el.innerHTML=`<h4><i class="fas fa-telescope"></i> Forecast</h4><p>After ${up} classes (attending ${at}):</p><p>Projected: <strong style="color:${safe?'var(--acc)':'var(--danger)'};font-size:1.05em">${np.toFixed(1)}%</strong></p><p style="margin-top:8px"><span class="schip ${safe?'chip-safe':'chip-crit'}">${safe?`✓ Will meet ${tgt}%`:`✗ Below ${tgt}%`}</span></p>`;
+  el.style.display='block';
 }
 
-// ═══════════════════════════════════════
-// TARGET
-// ═══════════════════════════════════════
-function updateTarget() {
-    targetAttendance = parseInt(document.getElementById('target-slider').value);
-    document.getElementById('target-display').textContent = targetAttendance + '%';
-    localStorage.setItem('lpuTarget', targetAttendance);
-    render();
+function updateTarget(){
+  targetAttendance=parseInt(document.getElementById('target-slider').value);
+  document.getElementById('target-display').textContent=targetAttendance+'%';
+  sliderBg(document.getElementById('target-slider'));
+  localStorage.setItem('lpuTarget',targetAttendance);render();
 }
+function sliderBg(el){const v=((el.value-el.min)/(el.max-el.min))*100;el.style.setProperty('--val',v+'%');}
+document.getElementById('target-slider').addEventListener('input',function(){sliderBg(this);});
 
-// ═══════════════════════════════════════
-// TABS
-// ═══════════════════════════════════════
-function switchTab(id, btn) {
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if (btn) btn.classList.add('active');
+function switchTab(id,btn){
+  document.querySelectorAll('.tpane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');if(btn)btn.classList.add('active');
+  ['bunk-result','req-result','dayskip-result','forecast-result'].forEach(r=>{const e=document.getElementById(r);if(e)e.style.display='none';});
 }
-
-// ═══════════════════════════════════════
-// THEME
-// ═══════════════════════════════════════
-function toggleTheme() {
-    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-    document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
-    document.getElementById('theme-icon').className = dark ? 'fas fa-moon' : 'fas fa-sun';
-    localStorage.setItem('lpuTheme', dark ? 'light' : 'dark');
+function togglePanel(id){if(window.innerWidth>=768)return;document.getElementById(id).classList.toggle('open');}
+function toggleTheme(){
+  const l=document.documentElement.getAttribute('data-theme')==='light';const n=l?'dark':'light';
+  document.documentElement.setAttribute('data-theme',n);document.getElementById('theme-icon').className=n==='light'?'fas fa-moon':'fas fa-sun';localStorage.setItem('lpuTheme',n);
 }
-
-// ═══════════════════════════════════════
-// EXPORT CSV
-// ═══════════════════════════════════════
-function exportCSV() {
-    if (!subjects.length) { toast('No data to export.', 'warning'); return; }
-    let csv = 'Subject,Attended,DL,Total,Effective,Percentage,Status\n';
-    subjects.forEach(s => {
-        const eff = s.attended + s.dl;
-        const pct = s.total > 0 ? Math.round((eff/s.total)*100) : 0;
-        const status = s.total === 0 ? 'N/A' : pct >= targetAttendance ? 'Safe' : pct >= targetAttendance - 10 ? 'Warning' : 'Critical';
-        csv += `"${s.name}",${s.attended},${s.dl},${s.total},${eff},${s.total > 0 ? pct+'%' : 'N/A'},${status}\n`;
-    });
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'lpu-attendance.csv'; a.click();
-    URL.revokeObjectURL(url);
-    toast('CSV exported!', 'success');
+function exportCSV(){
+  if(!subjects.length){toast('No data to export.','warning');return;}
+  let csv='Subject,Attended,DL,Total,Effective,Percentage,Status\n';
+  subjects.forEach(s=>{const eff=s.attended+s.dl,pct=s.total>0?Math.round((eff/s.total)*100):0;const st=s.total===0?'N/A':pct>=targetAttendance?'Safe':pct>=targetAttendance-10?'Warning':'Critical';csv+=`"${s.name}",${s.attended},${s.dl},${s.total},${eff},${s.total>0?pct+'%':'N/A'},${st}\n`;});
+  const blob=new Blob([csv],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='lpu-attendance.csv';a.click();URL.revokeObjectURL(url);toast('CSV exported!','success');
 }
-
-// ═══════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════
-function animNum(el, val, suffix) {
-    if (!el) return;
-    el.classList.remove('count-animate');
-    void el.offsetWidth;
-    el.textContent = val + suffix;
-    el.classList.add('count-animate');
+function animNum(id,val,suffix){const el=document.getElementById(id);if(!el)return;el.textContent=val+suffix;el.classList.remove('cpop');void el.offsetWidth;el.classList.add('cpop');}
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function save(){try{localStorage.setItem('lpuSubjects_v3',JSON.stringify(subjects));}catch(e){}}
+function toast(msg,type=''){
+  const w=document.getElementById('toast-wrap'),t=document.createElement('div');t.className=`toast ${type}`;
+  t.innerHTML=`<span>${type==='success'?'✓':type==='warning'?'⚠':type==='error'?'✗':'ℹ'}</span><span>${msg}</span>`;
+  w.appendChild(t);setTimeout(()=>{t.style.transition='opacity .3s,transform .3s';t.style.opacity='0';t.style.transform='translateY(6px)';setTimeout(()=>t.remove(),300);},3000);
 }
-
-function escHtml(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+let _cb=null;
+function showModal(title,body,cb){
+  document.getElementById('modal-title').textContent=title;document.getElementById('modal-body').textContent=body;_cb=cb;
+  document.getElementById('confirm-modal').classList.add('open');
+  document.getElementById('modal-confirm-btn').onclick=()=>{closeModal();if(_cb)_cb();};
 }
-
-function save() {
-    try { localStorage.setItem('lpuSubjects_v3', JSON.stringify(subjects)); } catch(e) {}
-}
-
-// ═══════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════
-function toast(msg, type = '') {
-    const wrap = document.getElementById('toast-wrap');
-    const t = document.createElement('div');
-    t.className = `toast ${type}`;
-    const icon = type === 'success' ? '✓' : type === 'warning' ? '⚠' : type === 'error' ? '✗' : 'ℹ';
-    t.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
-    wrap.appendChild(t);
-    setTimeout(() => {
-        t.style.animation = 'slideOut .3s ease forwards';
-        setTimeout(() => t.remove(), 300);
-    }, 3000);
-}
-
-// ═══════════════════════════════════════
-// MODAL
-// ═══════════════════════════════════════
-let _modalCb = null;
-function showModal(title, body, onConfirm) {
-    document.getElementById('modal-title').textContent = title;
-    document.getElementById('modal-body').textContent = body;
-    _modalCb = onConfirm;
-    document.getElementById('confirm-modal').classList.add('open');
-    document.getElementById('modal-confirm-btn').onclick = () => { closeModal(); if (_modalCb) _modalCb(); };
-}
-function closeModal() {
-    document.getElementById('confirm-modal').classList.remove('open');
-}
-document.getElementById('confirm-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
-
-// ═══════════════════════════════════════
-// KEYBOARD
-// ═══════════════════════════════════════
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
-});
-
-// ═══ BOOT ═══
+function closeModal(){document.getElementById('confirm-modal').classList.remove('open');}
+document.getElementById('confirm-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 init();
 </script>
 </body>
